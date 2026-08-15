@@ -1,0 +1,94 @@
+{
+  "name": "chimekit",
+  "version": "1.1.0",
+  "description": "Framework-agnostic, macOS-style notification/toast library with zero runtime dependencies.",
+  "license": "MIT",
+  "author": "Vikas Chauhan <vkschhn95@gmail.com>",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./style.css": "./dist/style.css",
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js",
+      "require": "./dist/react.cjs"
+    },
+    "./angular": {
+      "types": "./dist/angular.d.ts",
+      "import": "./dist/angular.js",
+      "require": "./dist/angular.cjs"
+    },
+    "./vue": {
+      "types": "./dist/vue.d.ts",
+      "import": "./dist/vue.js",
+      "require": "./dist/vue.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "build": "tsup && cp src/style.css dist/style.css",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "demo": "npx serve ."
+  },
+  "peerDependencies": {
+    "@angular/core": ">=13.0.0",
+    "react": ">=16.8.0",
+    "vue": ">=3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "@angular/core": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@angular/core": "^18.2.0",
+    "@types/react": "^18.3.3",
+    "jsdom": "^24.1.0",
+    "react": "^18.3.1",
+    "reflect-metadata": "^0.2.2",
+    "tsup": "^8.0.2",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5",
+    "vue": "^3.5.41",
+    "zone.js": "^0.14.10"
+  },
+  "keywords": [
+    "notification",
+    "toast",
+    "notify",
+    "alert",
+    "framework-agnostic",
+    "react",
+    "angular",
+    "vue"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/chimekit.git"
+  },
+  "homepage": "https://github.com/your-username/chimekit#readme",
+  "bugs": {
+    "url": "https://github.com/your-username/chimekit/issues"
+  }
+}

@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChimeKit — demo</title>
+  <link rel="stylesheet" href="../dist/style.css" />
+  <style>
+    :root {
+      --bg-0: #eef0f5;
+      --bg-1: #ffffff;
+      --ink: #16161a;
+      --muted: #6b6b76;
+      --border: rgba(20, 20, 30, 0.08);
+      --card-shadow: 0 1px 2px rgba(20, 20, 30, 0.04), 0 8px 24px rgba(20, 20, 30, 0.06);
+      --accent: #6d5bf6;
+      --accent-2: #22a55e;
+      --accent-3: #e5484d;
+      --accent-4: #e59d00;
+      --accent-5: #3b82f6;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-0: #0f0f13;
+        --bg-1: #1a1a20;
+        --ink: #f2f2f5;
+        --muted: #9a9aa4;
+        --border: rgba(255, 255, 255, 0.08);
+        --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: var(--ink);
+      min-height: 100vh;
+      background:
+        radial-gradient(900px 480px at 12% -10%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
+        radial-gradient(700px 420px at 100% 0%, color-mix(in srgb, var(--accent-5) 14%, transparent), transparent 60%),
+        var(--bg-0);
+    }
+
+    .hero {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 64px 24px 8px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font: 600 11.5px/1 system-ui, sans-serif;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      padding: 6px 10px;
+      border-radius: 999px;
+      margin-bottom: 18px;
+    }
+    .eyebrow .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent-2);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-2) 25%, transparent);
+    }
+    h1 {
+      font-size: clamp(30px, 5vw, 42px);
+      line-height: 1.05;
+      margin: 0 0 10px;
+      letter-spacing: -0.02em;
+      background: linear-gradient(120deg, var(--ink), var(--accent) 120%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    p.sub {
+      color: var(--muted);
+      margin: 0 0 8px;
+      font-size: 15px;
+      max-width: 56ch;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px 24px 90px;
+      display: grid;
+      gap: 18px;
+    }
+
+    section.card {
+      padding: 22px;
+      border-radius: var(--radius-lg);
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      box-shadow: var(--card-shadow);
+    }
+    section.card h2 {
+      font-size: 12.5px;
+      margin: 0 0 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    section.card p.hint {
+      margin: 0 0 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--ink) 4%, transparent);
+      border: 1px solid var(--border);
+      padding: 6px 8px 6px 12px;
+      border-radius: 10px;
+    }
+    .field select {
+      font: 600 13px/1 inherit;
+      color: var(--ink);
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 4px 2px;
+    }
+    .field input[type='color'] {
+      width: 26px;
+      height: 26px;
+      padding: 0;
+      border: none;
+      border-radius: 7px;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    /* Demo-only icon font stand-in — proves `icon` can be a plain CSS class name, without pulling
+       in a real icon font just for this example. */
+    .demo-star-icon::before {
+      content: '⭐';
+      font-size: 15px;
+      line-height: 20px;
+    }
+    label.toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--ink) 4%, transparent);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    label.toggle input { accent-color: var(--accent); width: 15px; height: 15px; }
+
+    button.btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font: 600 13px/1 inherit;
+      color: var(--ink);
+      padding: 11px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-1);
+      cursor: pointer;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+      transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+    }
+    button.btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(20, 20, 30, 0.10);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+    }
+    button.btn:active { transform: translateY(0); }
+    button.btn .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+    button.btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    button.btn:disabled:hover {
+      transform: none;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+      border-color: var(--border);
+    }
+
+    button.btn--primary {
+      background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 60%, var(--accent-5)));
+      color: #fff;
+      border-color: transparent;
+    }
+    button.btn--ghost {
+      background: transparent;
+    }
+
+    .badge {
+      font: 700 10.5px/1 system-ui, sans-serif;
+      letter-spacing: 0.03em;
+      padding: 3px 7px;
+      border-radius: 999px;
+      color: #fff;
+    }
+
+    pre#log {
+      margin: 0;
+      max-height: 220px;
+      overflow: auto;
+      font: 12.5px/1.6 ui-monospace, 'SF Mono', Menlo, monospace;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--ink) 4%, transparent);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+    pre#log .open { color: var(--accent-2); }
+    pre#log .close { color: var(--accent-3); }
+    pre#log .action { color: var(--accent-5); }
+
+    details.code-panel {
+      margin-top: 14px;
+    }
+    details.code-panel summary {
+      cursor: pointer;
+      font: 600 12px/1 system-ui, sans-serif;
+      color: var(--accent);
+      list-style: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    details.code-panel summary::-webkit-details-marker { display: none; }
+    details.code-panel summary::before {
+      content: '▸';
+      font-size: 10px;
+      display: inline-block;
+      transition: transform 120ms ease;
+    }
+    details.code-panel[open] summary::before {
+      transform: rotate(90deg);
+    }
+    details.code-panel pre {
+      margin: 10px 0 0;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: color-mix(in srgb, var(--ink) 5%, transparent);
+      overflow-x: auto;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+    details.code-panel code {
+      font: 12.5px/1.6 ui-monospace, 'SF Mono', Menlo, monospace;
+      color: var(--ink);
+      white-space: pre;
+    }
+
+    footer {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+    footer a { color: inherit; }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <span class="eyebrow"><span class="dot"></span> ChimeKit · playground</span>
+    <h1>Framework-agnostic notifications,<br />macOS-style.</h1>
+    <p class="sub">Stacked toasts, timers, backdrops, dedupe, and singleAtATime — all driven by the
+      imperative <code>notify</code> API. Click anything below to try it live.</p>
+  </div>
+
+  <main>
+    <section class="card">
+      <h2>Global config</h2>
+      <p class="hint">Applied instantly via <code>configure()</code> — affects every notification fired below.</p>
+      <div class="row">
+        <div class="field">
+          Position
+          <select id="position">
+            <option value="top-right" selected>top-right</option>
+            <option value="top-left">top-left</option>
+            <option value="top-center">top-center</option>
+            <option value="bottom-right">bottom-right</option>
+            <option value="bottom-left">bottom-left</option>
+            <option value="bottom-center">bottom-center</option>
+          </select>
+        </div>
+        <div class="field">
+          Default timer style
+          <select id="timerStyle">
+            <option value="progress-bar" selected>progress-bar</option>
+            <option value="countdown-number">countdown-number</option>
+            <option value="none">none</option>
+          </select>
+        </div>
+        <div class="field">
+          Theme
+          <select id="theme">
+            <option value="auto" selected>auto</option>
+            <option value="light">light</option>
+            <option value="dark">dark</option>
+          </select>
+        </div>
+        <label class="toggle"><input type="checkbox" id="singleAtATime" /> singleAtATime</label>
+        <label class="toggle"><input type="checkbox" id="backdropEnabled" /> backdrop</label>
+        <label class="toggle"><input type="checkbox" id="backdropCloseOnClick" /> close on backdrop click</label>
+      </div>
+      <details class="code-panel">
+        <summary>Show code</summary>
+        <pre><code id="code-global-config"></code></pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Default types</h2>
+      <p class="hint">Each preset ships a default icon, accent color, and ARIA role. Optionally override
+        the background/text color, or the icon itself — <code>icon</code> accepts a CSS class name
+        (e.g. from an icon font already loaded on your page) or raw <code>&lt;svg&gt;</code> markup.</p>
+      <div class="row">
+        <button class="btn" id="btn-success"><span class="dot" style="background:var(--accent-2)"></span>success</button>
+        <button class="btn" id="btn-error"><span class="dot" style="background:var(--accent-3)"></span>error</button>
+        <button class="btn" id="btn-warning"><span class="dot" style="background:var(--accent-4)"></span>warning</button>
+        <button class="btn" id="btn-info"><span class="dot" style="background:var(--accent-5)"></span>info</button>
+      </div>
+      <div class="row" style="margin-top: 10px;">
+        <label class="toggle"><input type="checkbox" id="defaultTypeUseColors" /> custom colors</label>
+        <div class="field">
+          Background
+          <input type="color" id="defaultTypeBg" value="#111827" />
+        </div>
+        <div class="field">
+          Text
+          <input type="color" id="defaultTypeText" value="#fde68a" />
+        </div>
+      </div>
+      <div class="row" style="margin-top: 10px;">
+        <label class="toggle"><input type="checkbox" id="defaultTypeUseIcon" /> custom icon</label>
+        <div class="field" style="flex: 1; min-width: 280px;">
+          <select id="defaultTypeIconKind" style="flex: none;">
+            <option value="svg" selected>svg</option>
+            <option value="class">CSS class</option>
+          </select>
+          <input type="text" id="defaultTypeIconValue"
+            value="&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;&gt;&lt;path d=&quot;M12 2.5l2.9 6.9 7.1.9-5.2 4.9L18.2 22 12 18.3 5.8 22 7 15.2 1.8 10.3l7.1-.9z&quot;/&gt;&lt;/svg&gt;"
+            placeholder="CSS class (e.g. fa-solid fa-star) or <svg>...</svg>"
+            style="flex: 1; min-width: 0; border: none; background: transparent; outline: none; font: 600 12.5px/1.4 ui-monospace, monospace; color: var(--ink);" />
+        </div>
+      </div>
+      <details class="code-panel">
+        <summary>Show code</summary>
+        <pre><code id="code-default-types"></code></pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Timer styles</h2>
+      <p class="hint">Each button below fires with an explicit <code>timerStyle</code> and a 6s duration, regardless of the global config above — so you can compare all three side by side.</p>
+      <div class="row">
+        <button class="btn" id="btn-timer-progress">Progress bar (6s)</button>
+        <button class="btn" id="btn-timer-countdown">Countdown number (6s)</button>
+        <button class="btn" id="btn-timer-none">Silent timer — none (6s)</button>
+        <button class="btn" id="btn-timer-infinite">Infinite — stays open</button>
+        <button class="btn" id="btn-timer-long-message">Long message + countdown (8s)</button>
+      </div>
+      <details class="code-panel">
+        <summary>Show code</summary>
+        <pre><code id="code-timer-styles"></code></pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Custom &amp; edge cases</h2>
+      <p class="hint">Actions, custom HTML messages, bare messages, dedupe, stacking overflow, and bulk clear.
+        Actions can carry a timer too — <code>actions</code> and <code>timerStyle</code>/<code>duration</code>
+        are fully independent of each other. The HTML message also has its own progress-bar/countdown
+        timer, and marks exactly where the countdown lands with a <code>[data-notify-countdown]</code>
+        placeholder — anything after that marker in the HTML renders after the countdown.</p>
+      <div class="row" style="margin-bottom: 10px;">
+        <div class="field">
+          Actions timer style
+          <select id="actionsTimerStyle">
+            <option value="infinite" selected>infinite (no timer)</option>
+            <option value="progress-bar">progress-bar</option>
+            <option value="countdown-number">countdown-number</option>
+            <option value="none">none (6s, silent)</option>
+          </select>
+        </div>
+        <div class="field">
+          HTML message timer style
+          <select id="htmlMessageTimerStyle">
+            <option value="progress-bar" selected>progress-bar</option>
+            <option value="countdown-number">countdown-number</option>
+            <option value="none">none</option>
+            <option value="infinite">infinite (no timer)</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn" id="btn-actions">Error with actions</button>
+        <button class="btn" id="btn-html-message">Custom HTML message</button>
+        <button class="btn" id="btn-bare">Bare message (no chrome)</button>
+        <button class="btn" id="btn-infinite-unique">Unique + infinite ("sync")</button>
+        <button class="btn" id="btn-stack">Stack 6 notifications</button>
+        <button class="btn btn--ghost" id="btn-clear">clearAll()</button>
+      </div>
+      <details class="code-panel">
+        <summary>Show code</summary>
+        <pre><code id="code-edge-cases"></code></pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Custom colors</h2>
+      <p class="hint">Per-notification <code>backgroundColor</code> / <code>textColor</code> — overrides the theme for just this one toast.</p>
+      <div class="row">
+        <div class="field">
+          Background
+          <input type="color" id="customBg" value="#111827" />
+        </div>
+        <div class="field">
+          Text
+          <input type="color" id="customText" value="#fde68a" />
+        </div>
+        <button class="btn" id="btn-custom-colors">Fire with custom colors</button>
+      </div>
+      <details class="code-panel">
+        <summary>Show code</summary>
+        <pre><code id="code-custom-colors"></code></pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Element ids &amp; notification id tracking</h2>
+      <p class="hint">Every part of a toast gets a stable, unique DOM <code>id</code> for CSS/JS targeting
+        (<code>notify-toast-&lt;id&gt;</code>, <code>notify-message-&lt;id&gt;</code>, <code>notify-close-&lt;id&gt;</code>, …).
+        Every <code>notify.*()</code> call also returns that notification's <code>id</code>, and
+        <code>onClose(id, reason)</code> / the global <code>close</code> event report that exact same
+        <code>id</code> back — so you always know which toast opened or closed.</p>
+      <div class="row">
+        <button class="btn" id="btn-fire-tracked">Fire &amp; inspect id</button>
+        <button class="btn btn--ghost" id="btn-close-tracked" disabled>Close it (by id)</button>
+      </div>
+      <div class="row" style="margin-top: 10px;">
+        <div class="field">Last id: <code id="lastTrackedId">—</code></div>
+      </div>
+      <details class="code-panel">
+        <summary>Show code</summary>
+        <pre><code id="code-ids"></code></pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Event log</h2>
+      <p class="hint"><code>notify.on('open' | 'close' | 'action', …)</code> — newest first.</p>
+      <pre id="log"></pre>
+    </section>
+  </main>
+
+  <footer>
+    Backdrop &amp; toasts share a stacking context — toasts always render above the dim overlay, so
+    clicking a toast never triggers a backdrop-click close.
+  </footer>
+
+  <script src="../dist/index.global.js"></script>
+  <script>
+    const { notify, configure, COUNTDOWN_SLOT_ATTR } = ChimeKit;
+
+    const LONG_MESSAGE =
+      "This message is deliberately long, to check that word-wrap and the inline countdown-number " +
+      "timer both behave when the text runs to several lines instead of one — the countdown should " +
+      "still land right after the last word, with its usual gap, never clipped or overlapping the " +
+      "close button.";
+
+    // [data-notify-countdown] marks exactly where the countdown-number timer should render inside
+    // a { html } message — anything placed after that marker in the markup ends up after it too.
+    const HTML_MESSAGE_MARKUP =
+      `Supports <strong>bold</strong>, <em>italic</em>, and <a href="#">links</a>. ` +
+      `<span ${COUNTDOWN_SLOT_ATTR}></span> <em>— custom HTML can even follow the countdown.</em>`;
+
+    const SVG_STAR_ICON =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.9 6.9 7.1.9-5.2 4.9L18.2 22 12 18.3 5.8 22 7 15.2 1.8 10.3l7.1-.9z"/></svg>';
+    const CLASS_STAR_ICON = 'demo-star-icon';
+
+    const log = document.getElementById('log');
+    function writeLog(kind, line) {
+      const span = document.createElement('div');
+      span.className = kind;
+      span.textContent = line;
+      log.prepend(span);
+      while (log.childNodes.length > 200) log.removeChild(log.lastChild);
+    }
+    notify.on('open', (p) => writeLog('open', `open   ${p.type} ${p.id}`));
+    notify.on('close', (p) => writeLog('close', `close  ${p.type} ${p.id} (${p.reason})`));
+    notify.on('action', (p) => writeLog('action', `action ${p.id} -> ${p.actionId}`));
+
+    function currentConfig() {
+      return {
+        position: document.getElementById('position').value,
+        singleAtATime: document.getElementById('singleAtATime').checked,
+        backdrop: {
+          enabled: document.getElementById('backdropEnabled').checked,
+          closeOnClick: document.getElementById('backdropCloseOnClick').checked,
+        },
+        theme: document.getElementById('theme').value,
+        maxVisible: 3,
+      };
+    }
+    function applyConfig() {
+      configure(currentConfig());
+    }
+
+    function timerStyle() {
+      return document.getElementById('timerStyle').value;
+    }
+
+    function defaultTypeColorOverrides() {
+      if (!document.getElementById('defaultTypeUseColors').checked) return {};
+      return {
+        backgroundColor: document.getElementById('defaultTypeBg').value,
+        textColor: document.getElementById('defaultTypeText').value,
+      };
+    }
+
+    function defaultTypeIconOverride() {
+      if (!document.getElementById('defaultTypeUseIcon').checked) return {};
+      const value = document.getElementById('defaultTypeIconValue').value.trim();
+      return value ? { icon: value } : {};
+    }
+
+    // --- "Show code" panels: each mirrors the exact call the matching button(s) make ---
+
+    function renderGlobalConfigCode() {
+      const cfg = currentConfig();
+      document.getElementById('code-global-config').textContent = `configure({
+  position: '${cfg.position}',
+  singleAtATime: ${cfg.singleAtATime},
+  backdrop: { enabled: ${cfg.backdrop.enabled}, closeOnClick: ${cfg.backdrop.closeOnClick} },
+  theme: '${cfg.theme}',
+  maxVisible: ${cfg.maxVisible},
+});`;
+    }
+
+    function renderDefaultTypesCode() {
+      const useColors = document.getElementById('defaultTypeUseColors').checked;
+      const bg = document.getElementById('defaultTypeBg').value;
+      const text = document.getElementById('defaultTypeText').value;
+      const colorLines = useColors ? `\n  backgroundColor: '${bg}',\n  textColor: '${text}',` : '';
+
+      const iconOverride = defaultTypeIconOverride();
+      const iconLine = 'icon' in iconOverride ? `\n  icon: '${iconOverride.icon.replace(/'/g, "\\'")}',` : '';
+
+      document.getElementById('code-default-types').textContent = `notify.success({
+  title: 'Saved',
+  message: 'Your changes have been saved.',
+  duration: 4000,
+  timerStyle: '${timerStyle()}',${iconLine}${colorLines}
+});
+
+// error / warning / info fire the same shape via notify.error(), notify.warning(), notify.info()`;
+    }
+
+    function renderTimerStylesCode() {
+      document.getElementById('code-timer-styles').textContent = `notify.info({
+  title: 'progress-bar',
+  message: 'Watch the bar deplete along the bottom edge.',
+  duration: 6000,
+  timerStyle: 'progress-bar',
+});
+
+notify.info({
+  title: 'countdown-number',
+  message: 'Ticks down once per second.',
+  duration: 6000,
+  timerStyle: 'countdown-number',
+});
+
+notify.info({
+  title: 'timerStyle: none',
+  message: 'Countdown runs silently in the background.',
+  duration: 6000,
+  timerStyle: 'none',
+});
+
+notify.info({
+  title: "duration: 'infinite'",
+  message: 'Stays until closed or acted on.',
+  duration: 'infinite',
+});
+
+notify.warning({
+  title: 'Long message + countdown',
+  message: LONG_MESSAGE,
+  duration: 8000,
+  timerStyle: 'countdown-number',
+});`;
+    }
+
+    function actionsTimerOptions() {
+      const style = document.getElementById('actionsTimerStyle').value;
+      if (style === 'infinite') return { duration: 'infinite' };
+      return { duration: 6000, timerStyle: style };
+    }
+
+    function htmlMessageTimerOptions() {
+      const style = document.getElementById('htmlMessageTimerStyle').value;
+      if (style === 'infinite') return { duration: 'infinite' };
+      return { duration: 5000, timerStyle: style };
+    }
+
+    function timerLinesFor(opts) {
+      return opts.duration === 'infinite'
+        ? `  duration: 'infinite',`
+        : `  duration: ${opts.duration},\n  timerStyle: '${opts.timerStyle}',`;
+    }
+
+    function renderEdgeCasesCode() {
+      document.getElementById('code-edge-cases').textContent = `notify.error({
+  title: 'Upload failed',
+  message: 'Please check your connection and try again.',
+${timerLinesFor(actionsTimerOptions())}
+  actions: [
+    { id: 'retry', label: 'Retry', style: 'primary' },
+    { id: 'dismiss', label: 'Dismiss', style: 'destructive' },
+  ],
+  onAction: (id, actionId) => {
+    if (actionId === 'retry') retryUpload();
+    if (actionId === 'dismiss') notify.close(id);
+  },
+});
+
+// [data-notify-countdown] (exported as COUNTDOWN_SLOT_ATTR) marks exactly where the countdown
+// lands — anything after that marker in the HTML renders after the countdown too.
+notify.custom({
+  title: 'Custom HTML message',
+  message: { html: '${HTML_MESSAGE_MARKUP}' },
+${timerLinesFor(htmlMessageTimerOptions())}
+});
+
+notify.custom({
+  icon: false,
+  message: 'Copied to clipboard',
+  duration: 1500,
+  timerStyle: 'none',
+  showCloseButton: false,
+});
+
+const id = notify.info({ message: 'Syncing…', duration: 'infinite', unique: 'sync' });
+notify.close(id); // e.g. once the async work resolves
+
+['success', 'error', 'warning', 'info'].forEach((type, i) => notify[type]({
+  title: \`Notification \${i + 1}\`,
+  message: 'Part of a stacked group.',
+  duration: 8000,
+  timerStyle: '${timerStyle()}',
+}));
+
+notify.clearAll();`;
+    }
+
+    function renderCustomColorsCode() {
+      const bg = document.getElementById('customBg').value;
+      const text = document.getElementById('customText').value;
+      document.getElementById('code-custom-colors').textContent = `notify.custom({
+  title: 'Custom colors',
+  message: 'backgroundColor and textColor set per-notification.',
+  backgroundColor: '${bg}',
+  textColor: '${text}',
+  duration: 5000,
+  timerStyle: '${timerStyle()}',
+});`;
+    }
+
+    function renderIdsCode() {
+      document.getElementById('code-ids').textContent = `const id = notify.info({
+  title: 'Tracked notification',
+  message: 'Its id is shown below and targetable via #notify-toast-<id>.',
+  duration: 'infinite',
+  onClose: (closedId, reason) => {
+    console.log(closedId === id, reason); // always true — same id every time
+  },
+});
+
+// Every rendered part has a matching, stable id:
+document.getElementById(\`notify-toast-\${id}\`);
+document.getElementById(\`notify-message-\${id}\`);
+document.getElementById(\`notify-close-\${id}\`);
+
+notify.close(id); // closes that exact notification`;
+    }
+
+    function refreshEverything() {
+      applyConfig();
+      renderGlobalConfigCode();
+      renderDefaultTypesCode();
+      renderTimerStylesCode();
+      renderEdgeCasesCode();
+      renderCustomColorsCode();
+      renderIdsCode();
+    }
+
+    [
+      'position', 'singleAtATime', 'backdropEnabled', 'backdropCloseOnClick', 'theme', 'timerStyle',
+      'defaultTypeUseColors', 'defaultTypeBg', 'defaultTypeText', 'customBg', 'customText',
+      'actionsTimerStyle', 'htmlMessageTimerStyle', 'defaultTypeUseIcon', 'defaultTypeIconValue',
+    ].forEach((id) => document.getElementById(id).addEventListener('change', refreshEverything));
+    refreshEverything();
+
+    document.getElementById('defaultTypeIconKind').addEventListener('change', (event) => {
+      document.getElementById('defaultTypeIconValue').value =
+        event.target.value === 'class' ? CLASS_STAR_ICON : SVG_STAR_ICON;
+      refreshEverything();
+    });
+
+    document.getElementById('btn-success').addEventListener('click', () => {
+      notify.success({ title: 'Saved', message: 'Your changes have been saved.', duration: 4000, timerStyle: timerStyle(), ...defaultTypeColorOverrides(), ...defaultTypeIconOverride() });
+    });
+    document.getElementById('btn-error').addEventListener('click', () => {
+      notify.error({ title: 'Upload failed', message: 'Please check your connection and try again.', duration: 5000, timerStyle: timerStyle(), ...defaultTypeColorOverrides(), ...defaultTypeIconOverride() });
+    });
+    document.getElementById('btn-warning').addEventListener('click', () => {
+      notify.warning({ title: 'Low disk space', message: '2GB remaining on this device.', duration: 4500, timerStyle: timerStyle(), ...defaultTypeColorOverrides(), ...defaultTypeIconOverride() });
+    });
+    document.getElementById('btn-info').addEventListener('click', () => {
+      notify.info({ title: 'Heads up', message: 'A new version is available.', duration: 4000, timerStyle: timerStyle(), ...defaultTypeColorOverrides(), ...defaultTypeIconOverride() });
+    });
+
+    document.getElementById('btn-timer-progress').addEventListener('click', () => {
+      notify.info({ title: 'progress-bar', message: 'Watch the bar deplete along the bottom edge.', duration: 6000, timerStyle: 'progress-bar' });
+    });
+    document.getElementById('btn-timer-countdown').addEventListener('click', () => {
+      notify.info({ title: 'countdown-number', message: 'Ticks down once per second.', duration: 6000, timerStyle: 'countdown-number' });
+    });
+    document.getElementById('btn-timer-none').addEventListener('click', () => {
+      notify.info({ title: 'timerStyle: none', message: 'Countdown runs silently in the background.', duration: 6000, timerStyle: 'none' });
+    });
+    document.getElementById('btn-timer-infinite').addEventListener('click', () => {
+      notify.info({ title: "duration: 'infinite'", message: 'Stays until closed or acted on.', duration: 'infinite' });
+    });
+
+    document.getElementById('btn-timer-long-message').addEventListener('click', () => {
+      notify.warning({
+        title: 'Long message + countdown',
+        message: LONG_MESSAGE,
+        duration: 8000,
+        timerStyle: 'countdown-number',
+      });
+    });
+
+    document.getElementById('btn-actions').addEventListener('click', () => {
+      notify.error({
+        title: 'Upload failed',
+        message: 'Please check your connection and try again.',
+        ...actionsTimerOptions(),
+        actions: [
+          { id: 'retry', label: 'Retry', style: 'primary' },
+          { id: 'dismiss', label: 'Dismiss', style: 'destructive' },
+        ],
+        onAction: (id, actionId) => {
+          if (actionId === 'retry') writeLog('action', 'retrying upload...');
+          if (actionId === 'dismiss') notify.close(id);
+        },
+      });
+    });
+
+    document.getElementById('btn-html-message').addEventListener('click', () => {
+      notify.custom({
+        title: 'Custom HTML message',
+        message: { html: HTML_MESSAGE_MARKUP },
+        ...htmlMessageTimerOptions(),
+      });
+    });
+
+    document.getElementById('btn-bare').addEventListener('click', () => {
+      notify.custom({
+        icon: false,
+        message: 'Copied to clipboard',
+        duration: 1500,
+        timerStyle: 'none',
+        showCloseButton: false,
+      });
+    });
+
+    document.getElementById('btn-infinite-unique').addEventListener('click', () => {
+      const id = notify.info({ message: 'Syncing…', duration: 'infinite', unique: 'sync' });
+      setTimeout(() => notify.close(id), 3000);
+    });
+
+    document.getElementById('btn-stack').addEventListener('click', () => {
+      const types = ['success', 'error', 'warning', 'info'];
+      for (let i = 0; i < 6; i++) {
+        notify[types[i % types.length]]({
+          title: `Notification ${i + 1}`,
+          message: 'Part of a stacked group.',
+          duration: 8000,
+          timerStyle: timerStyle(),
+        });
+      }
+    });
+
+    document.getElementById('btn-clear').addEventListener('click', () => notify.clearAll());
+
+    document.getElementById('btn-custom-colors').addEventListener('click', () => {
+      notify.custom({
+        title: 'Custom colors',
+        message: 'backgroundColor and textColor set per-notification.',
+        backgroundColor: document.getElementById('customBg').value,
+        textColor: document.getElementById('customText').value,
+        duration: 5000,
+        timerStyle: timerStyle(),
+      });
+    });
+
+    let lastTrackedId = null;
+
+    document.getElementById('btn-fire-tracked').addEventListener('click', () => {
+      lastTrackedId = notify.info({
+        title: 'Tracked notification',
+        message: 'Its id is shown below and targetable via #notify-toast-<id>.',
+        duration: 'infinite',
+      });
+      document.getElementById('lastTrackedId').textContent = lastTrackedId;
+      document.getElementById('btn-close-tracked').disabled = false;
+
+      // Prove the returned id is a real, targetable DOM id.
+      const toastEl = document.getElementById(`notify-toast-${lastTrackedId}`);
+      toastEl.style.outline = '2px solid var(--accent)';
+      toastEl.style.outlineOffset = '2px';
+    });
+
+    document.getElementById('btn-close-tracked').addEventListener('click', () => {
+      if (lastTrackedId) notify.close(lastTrackedId);
+    });
+
+    notify.on('close', (p) => {
+      if (p.id === lastTrackedId) {
+        writeLog('close', `close  confirmed: onClose/close-event id matches the id fire() returned (${p.id})`);
+        document.getElementById('btn-close-tracked').disabled = true;
+      }
+    });
+  </script>
+</body>
+</html>
