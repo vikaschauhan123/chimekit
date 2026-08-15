@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "description": "Framework-agnostic, macOS-style notification/toast library with zero runtime dependencies.",
   "license": "MIT",
-  "author": "Vikas Chauhan <vkschhn95@gmail.com>",
+  "author": "Vikas Chauhan",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -85,10 +85,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-username/chimekit.git"
+    "url": "git+https://github.com/vikaschauhan123/chimekit.git"
   },
-  "homepage": "https://github.com/your-username/chimekit#readme",
+  "homepage": "https://github.com/vikaschauhan123/chimekit#readme",
   "bugs": {
-    "url": "https://github.com/your-username/chimekit/issues"
+    "url": "https://github.com/vikaschauhan123/chimekit/issues"
   }
 }
