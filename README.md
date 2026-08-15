@@ -3,8 +3,8 @@
 Framework-agnostic, macOS-style notification/toast library. Zero runtime dependencies, works in
 plain JS/TS, React, Angular, Vue, Svelte, or any other framework.
 
-**[▶ Live demo](https://vikaschauhan123.github.io/chimekit/demo/index.html)** — a playground
-covering every option below.
+**[▶ Live demo](https://vikaschauhan123.github.io/chimekit/)** — a playground covering every
+option below.
 
 - Stacked toasts in any of 6 positions, with "Show more / Show less" and "Clear All"
 - 4 built-in types (`success` / `error` / `warning` / `info`) plus fully custom notifications
@@ -21,7 +21,7 @@ covering every option below.
 - Full TypeScript types, ESM + CJS + UMD builds, tree-shakeable
 - Optional `chimekit/react`, `chimekit/angular`, and `chimekit/vue` adapters, each a thin wrapper
   (sub-1KB gzip) over the same shared engine — no duplicated core code, no separate singletons
-- Ships with a live playground ([`demo/index.html`](https://vikaschauhan123.github.io/chimekit/demo/index.html)) covering every option above
+- Ships with a live playground on GitHub Pages at [`https://vikaschauhan123.github.io/chimekit/`](https://vikaschauhan123.github.io/chimekit/), which redirects to [`demo/index.html`](https://vikaschauhan123.github.io/chimekit/demo/index.html)
 
 ## Install
 
@@ -392,7 +392,12 @@ is dismiss-via-timer/close-button/action only unless you opt in.
 
 ## Demo playground
 
-`demo/index.html` is a live playground covering every option in this README:
+The demo is published as a static site on GitHub Pages. The root URL redirects to the playground:
+
+- `https://vikaschauhan123.github.io/chimekit/`
+- `https://vikaschauhan123.github.io/chimekit/demo/index.html`
+
+`demo/index.html` is the live playground covering every option in this README:
 
 - **Global config** — position, default timer style, theme (light/dark/auto), `singleAtATime`,
   backdrop on/off, and a separate "close on backdrop click" toggle.
@@ -419,6 +424,20 @@ is dismiss-via-timer/close-button/action only unless you opt in.
   change the controls above it.
 
 Run `npm run build && npm run demo` (see Development below) to try it locally.
+
+## GitHub Pages deployment
+
+The repo includes a GitHub Actions workflow that builds the library and publishes the static demo to Pages.
+The root page redirects to the demo so the project opens at the site root instead of forcing users to
+visit `/demo/index.html` manually.
+
+```bash
+npm install
+npm run build
+```
+
+Then push to `main` and use the repository settings to enable GitHub Pages with the `GitHub Actions`
+source.
 
 ## Development
 
