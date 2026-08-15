@@ -3,6 +3,9 @@
 Framework-agnostic, macOS-style notification/toast library. Zero runtime dependencies, works in
 plain JS/TS, React, Angular, Vue, Svelte, or any other framework.
 
+**[▶ Live demo](https://vikaschauhan123.github.io/chimekit/demo/index.html)** — a playground
+covering every option below.
+
 - Stacked toasts in any of 6 positions, with "Show more / Show less" and "Clear All"
 - 4 built-in types (`success` / `error` / `warning` / `info`) plus fully custom notifications
 - 3 timer styles (`progress-bar`, `countdown-number`, `none`) with pause-on-hover — work on action
@@ -18,7 +21,7 @@ plain JS/TS, React, Angular, Vue, Svelte, or any other framework.
 - Full TypeScript types, ESM + CJS + UMD builds, tree-shakeable
 - Optional `chimekit/react`, `chimekit/angular`, and `chimekit/vue` adapters, each a thin wrapper
   (sub-1KB gzip) over the same shared engine — no duplicated core code, no separate singletons
-- Ships with a live playground (`demo/index.html`) covering every option above
+- Ships with a live playground ([`demo/index.html`](https://vikaschauhan123.github.io/chimekit/demo/index.html)) covering every option above
 
 ## Install
 
