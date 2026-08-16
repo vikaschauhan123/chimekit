@@ -87,6 +87,30 @@ notify.custom({
 });
 ```
 
+### Notification-level dedupe
+
+Use `unique` on a toast to keep only one visible instance of that notification at a time. If a new
+notification has the same `unique` key as an already-open toast, the original toast stays and the new
+one is ignored (or its timer is restarted / moved to the top depending on the global
+`duplicateStrategy`).
+
+```js
+notify.info({
+  title: 'Syncing',
+  message: 'Your profile is syncing…',
+  duration: 'infinite',
+  unique: 'profile-sync',
+});
+
+notify.info({
+  title: 'Syncing',
+  message: 'Your profile is syncing…',
+  duration: 'infinite',
+  unique: 'profile-sync',
+});
+// The second call is ignored because the first toast with the same unique key is still visible.
+```
+
 ## API
 
 ### `notify`
@@ -306,6 +330,209 @@ const notify = useNotify();
 
 `NotificationPlugin` is optional (it only applies the global `configure()` call) — the core mounts
 its own DOM portal on `document.body`, so `notify.*` works from any component without it.
+
+## Service-based usage
+
+The simplest pattern is to create a small service/helper that owns the global configuration and wraps
+`notify.*()` calls for your app.
+
+### Angular service
+
+```ts
+import { Injectable } from '@angular/core';
+import { NotificationService } from 'chimekit/angular';
+import 'chimekit/style.css';
+
+@Injectable({ providedIn: 'root' })
+export class AppNotifications {
+  constructor(private notify: NotificationService) {
+    this.notify.configure({
+      position: 'top-right',
+      maxVisible: 3,
+      pauseOnHover: true,
+      backdrop: { enabled: false, closeOnClick: false },
+      singleAtATime: false,
+    });
+  }
+
+  success(message: string) {
+    return this.notify.success({
+      title: 'Success',
+      message,
+      duration: 4000,
+      timerStyle: 'progress-bar',
+    });
+  }
+
+  error(message: string) {
+    return this.notify.error({
+      title: 'Error',
+      message,
+      duration: 'infinite',
+      actions: [{ id: 'retry', label: 'Retry' }],
+      onAction: (_id, actionId) => {
+        if (actionId === 'retry') {
+          console.log('Retry clicked');
+        }
+      },
+    });
+  }
+}
+```
+
+Usage inside a component:
+
+```ts
+@Component({
+  selector: 'app-profile',
+  template: '<button (click)="save()">Save</button>',
+})
+export class ProfileComponent {
+  constructor(private appNotifications: AppNotifications) {}
+
+  save() {
+    this.appNotifications.success('Profile saved successfully');
+  }
+}
+```
+
+### React service/helper
+
+```tsx
+import { useEffect } from 'react';
+import { configure, useNotify, NotificationProvider } from 'chimekit/react';
+import 'chimekit/style.css';
+
+const appConfig = {
+  position: 'top-right',
+  maxVisible: 3,
+  pauseOnHover: true,
+  backdrop: { enabled: false, closeOnClick: false },
+  singleAtATime: false,
+};
+
+export function App() {
+  useEffect(() => {
+    configure(appConfig);
+  }, []);
+
+  return (
+    <NotificationProvider config={appConfig}>
+      <SaveButton />
+    </NotificationProvider>
+  );
+}
+
+function SaveButton() {
+  const notify = useNotify();
+
+  const handleSave = () => {
+    notify.success({
+      title: 'Saved',
+      message: 'Your changes were saved successfully.',
+      duration: 4000,
+      timerStyle: 'progress-bar',
+    });
+
+    notify.info({
+      title: 'Syncing',
+      message: 'Your data is syncing in the background.',
+      duration: 3000,
+    });
+  };
+
+  return <button onClick={handleSave}>Save</button>;
+}
+```
+
+A reusable service object is also fine:
+
+```ts
+import { notify, configure } from 'chimekit';
+import 'chimekit/style.css';
+
+configure({
+  position: 'top-right',
+  maxVisible: 4,
+  pauseOnHover: true,
+});
+
+export const notificationService = {
+  success: (message: string, title = 'Success') =>
+    notify.success({ title, message, duration: 4000, timerStyle: 'progress-bar' }),
+  error: (message: string, title = 'Error') =>
+    notify.error({ title, message, duration: 'infinite' }),
+  info: (message: string, title = 'Info') =>
+    notify.info({ title, message, duration: 3000 }),
+};
+```
+
+### Vue service/composable
+
+```ts
+import { createApp } from 'vue';
+import { NotificationPlugin, useNotify } from 'chimekit/vue';
+import 'chimekit/style.css';
+
+const app = createApp(App);
+
+app.use(NotificationPlugin, {
+  position: 'top-right',
+  maxVisible: 3,
+  pauseOnHover: true,
+  backdrop: { enabled: false, closeOnClick: false },
+  singleAtATime: false,
+});
+
+app.mount('#app');
+```
+
+Composable usage:
+
+```ts
+import { useNotify } from 'chimekit/vue';
+
+export function useNotifications() {
+  const notify = useNotify();
+
+  return {
+    success(message: string, title = 'Success') {
+      return notify.success({
+        title,
+        message,
+        duration: 4000,
+        timerStyle: 'progress-bar',
+      });
+    },
+    error(message: string, title = 'Error') {
+      return notify.error({
+        title,
+        message,
+        duration: 'infinite',
+        actions: [{ id: 'retry', label: 'Retry' }],
+      });
+    },
+  };
+}
+```
+
+Usage in a component:
+
+```vue
+<script setup lang="ts">
+import { useNotifications } from './useNotifications';
+
+const { success } = useNotifications();
+
+function handleSave() {
+  success('Profile saved successfully', 'Saved');
+}
+</script>
+
+<template>
+  <button @click="handleSave">Save</button>
+</template>
+```
 
 ### Next.js / Nuxt / other SSR frameworks
 

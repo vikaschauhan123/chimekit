@@ -414,7 +414,7 @@
         <button class="btn" id="btn-actions">Error with actions</button>
         <button class="btn" id="btn-html-message">Custom HTML message</button>
         <button class="btn" id="btn-bare">Bare message (no chrome)</button>
-        <button class="btn" id="btn-infinite-unique">Unique + infinite ("sync")</button>
+        <button class="btn" id="btn-infinite-unique">Notification-level dedupe (unique: "sync")</button>
         <button class="btn" id="btn-stack">Stack 6 notifications</button>
         <button class="btn btn--ghost" id="btn-clear">clearAll()</button>
       </div>
@@ -796,8 +796,11 @@ notify.close(id); // closes that exact notification`;
     });
 
     document.getElementById('btn-infinite-unique').addEventListener('click', () => {
-      const id = notify.info({ message: 'Syncing…', duration: 'infinite', unique: 'sync' });
-      setTimeout(() => notify.close(id), 3000);
+      // Notification-level dedupe: same unique key => original toast stays visible,
+      // later duplicates are ignored until the original closes.
+      notify.info({ title: 'Syncing…', message: 'Profile sync in progress', duration: 'infinite', unique: 'sync' });
+      notify.info({ title: 'Syncing…', message: 'Profile sync in progress', duration: 'infinite', unique: 'sync' });
+      notify.info({ title: 'Syncing…', message: 'Profile sync in progress', duration: 'infinite', unique: 'sync' });
     });
 
     document.getElementById('btn-stack').addEventListener('click', () => {
