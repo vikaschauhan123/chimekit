@@ -1,6 +1,6 @@
 {
   "name": "chimekit",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Framework-agnostic, macOS-style notification/toast library with zero runtime dependencies.",
   "license": "MIT",
   "author": "Vikas Chauhan",
