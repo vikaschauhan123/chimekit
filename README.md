@@ -29,9 +29,17 @@ option below.
 npm i chimekit
 ```
 
+Import the library and include the package stylesheet:
+
 ```js
 import { notify, configure } from 'chimekit';
 import 'chimekit/style.css';
+```
+
+If you are using a CSS file directly, this is the package path that gets shipped:
+
+```css
+@import 'chimekit/style.css';
 ```
 
 ## Quick start

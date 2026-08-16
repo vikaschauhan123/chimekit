@@ -38,7 +38,8 @@
     "*.css"
   ],
   "scripts": {
-    "build": "tsup && cp src/style.css dist/style.css",
+    "build": "tsup && node -e \"const fs=require('fs'); fs.mkdirSync('dist',{recursive:true}); fs.copyFileSync('src/style.css','dist/style.css');\"",
+    "prepack": "npm run build",
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
