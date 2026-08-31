@@ -1,6 +1,6 @@
 {
   "name": "chimekit",
-  "version": "1.3.0",
+  "version": "1.3.2",
   "description": "ChimeKit is a lightweight JavaScript toast notifications and toaster notifications library for React, Vue, Angular, TypeScript, and framework-agnostic apps with zero runtime dependencies.",
   "license": "MIT",
   "author": "Vikas Chauhan",
