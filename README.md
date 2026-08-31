@@ -6,6 +6,8 @@ plain JS/TS, React, Angular, Vue, Svelte, or any other framework.
 **[▶ Live demo](https://vikaschauhan123.github.io/chimekit/)** — a playground covering every
 option below.
 
+![ChimeKit demo overview](./assets/chimekit-demo-overview.png)
+
 - Stacked toasts in any of 6 positions, with "Show more / Show less" and "Clear All"
 - 4 built-in types (`success` / `error` / `warning` / `info`) plus fully custom notifications
 - 3 timer styles (`progress-bar`, `countdown-number`, `none`) with pause-on-hover — work on action
@@ -18,6 +20,7 @@ option below.
 - Every rendered part (toast, icon, title, message, actions, close button, timer UI, …) gets a
   stable, unique DOM `id` for direct CSS/JS targeting
 - Optional backdrop, dedupe strategies, `singleAtATime` mode
+- Optional notification sound effects at the global or per-toast level with built-in presets and custom audio file support
 - Full TypeScript types, ESM + CJS + UMD builds, tree-shakeable
 - Optional `chimekit/react`, `chimekit/angular`, and `chimekit/vue` adapters, each a thin wrapper
   (sub-1KB gzip) over the same shared engine — no duplicated core code, no separate singletons
@@ -112,6 +115,55 @@ notify.success({
 });
 ```
  
+### Notification sounds and custom audio
+
+You can play a sound on toast open globally or for a single notification. ChimeKit ships with a set of
+built-in default presets: `default`, `success`, `error`, `warning`, `info`, and `os-1` through
+`os-6`. The bundled demo tones are intentionally tiny mono WAV files so they stay lightweight and do not add noticeable startup overhead or app-wide audio cost.
+
+```js
+configure({
+  sound: {
+    preset: 'os-3',
+    volume: 0.45,
+  },
+});
+
+notify.error({
+  title: 'Upload failed',
+  message: 'Please check your internet connection.',
+  duration: 5000,
+  sound: {
+    preset: 'error',
+    volume: 0.5,
+  },
+});
+
+notify.info({
+  title: 'Synced',
+  message: 'Everything is up to date.',
+  duration: 3000,
+  sound: {
+    src: '/assets/quiet-chime.wav',
+    volume: 0.4,
+  },
+});
+
+const customAudio = document.getElementById('custom-sound-file');
+notify.success({
+  title: 'Custom alert',
+  message: 'Playing an uploaded sound file.',
+  duration: 4000,
+  sound: {
+    src: customAudio.files?.[0] ? URL.createObjectURL(customAudio.files[0]) : '/assets/notify.wav',
+    volume: 0.45,
+  },
+});
+```
+
+Use `sound: false` to disable audio for a toast or set the global config to `false` to silence all
+notifications. If you pass a custom `src`, it is used instead of the preset tone.
+
 ### Notification-level dedupe
 
 Use `unique` on a toast to keep only one visible instance of that notification at a time. If a new
@@ -172,6 +224,7 @@ top level.
 | `duration` | `number \| 'infinite'` | `'infinite'` (or `0`/omitted) = stays until closed |
 | `timerStyle` | `'none' \| 'progress-bar' \| 'countdown-number'` | Visual treatment for `duration` |
 | `backdrop` | `boolean \| BackdropConfig` | Per-call override of global backdrop |
+| `sound` | `NotificationSoundConfig \| false` | Per-call override of global notification sound |
 | `unique` | `boolean \| string` | Dedupe key; see `duplicateStrategy` |
 | `data` | `Record<string, unknown>` | Arbitrary metadata, not rendered |
 | `pauseOnHover` | `boolean` | Per-call override; default from global config (`true`) |

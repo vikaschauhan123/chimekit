@@ -52,6 +52,27 @@ export type ToastAnimation =
   | 'zoom-in'
   | 'zoom-out';
 
+export type NotificationSoundPreset =
+  | 'none'
+  | 'default'
+  | 'success'
+  | 'error'
+  | 'warning'
+  | 'info'
+  | 'os-1'
+  | 'os-2'
+  | 'os-3'
+  | 'os-4'
+  | 'os-5'
+  | 'os-6';
+
+export interface NotificationSoundConfig {
+  enabled?: boolean;
+  src?: string;
+  preset?: NotificationSoundPreset;
+  volume?: number;
+}
+
 export interface AnimationConfig {
   enter?: ToastAnimation | string;
   exit?: ToastAnimation | string;
@@ -65,6 +86,7 @@ export interface GlobalConfig {
   maxVisible?: number;
   duplicateStrategy?: DuplicateStrategy;
   animation?: AnimationConfig;
+  sound?: NotificationSoundConfig | false;
   theme?: 'light' | 'dark' | 'auto' | CustomThemeTokens;
   zIndex?: number;
   rtl?: boolean;
@@ -98,6 +120,7 @@ export interface NotificationOptions {
   timerStyle?: TimerStyle;
   backdrop?: boolean | BackdropConfig;
   animation?: AnimationConfig;
+  sound?: NotificationSoundConfig | false;
   unique?: boolean | string;
   data?: Record<string, unknown>;
   pauseOnHover?: boolean;
@@ -123,6 +146,7 @@ export interface ResolvedNotificationOptions extends NotificationOptions {
   showCloseButton: boolean;
   pauseOnHover: boolean;
   animation: AnimationConfig;
+  sound: NotificationSoundConfig | false;
 }
 
 export interface OpenEventPayload {

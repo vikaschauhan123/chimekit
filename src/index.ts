@@ -43,6 +43,8 @@ export type {
   MessageContent,
   NotificationAction,
   NotificationOptions,
+  NotificationSoundConfig,
+  NotificationSoundPreset,
   NotificationType,
   NotifyEventMap,
   OnOverflowBehavior,

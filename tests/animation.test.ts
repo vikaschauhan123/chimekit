@@ -36,4 +36,19 @@ describe('animation configuration', () => {
     expect(toast?.dataset.animationEnter).toBe('zoom-in');
     expect(toast?.dataset.animationExit).toBe('slide-top');
   });
+
+  it('supports custom CSS animation strings without blocking exit transitions', () => {
+    manager.open('info', {
+      message: 'hello',
+      duration: 'infinite',
+      animation: { enter: '300ms ease-out custom-enter', exit: '240ms ease-in custom-exit' },
+    });
+
+    const toast = document.querySelector<HTMLElement>('.notify-toast');
+    expect(toast?.style.getPropertyValue('--notify-enter-animation')).toBe('300ms ease-out custom-enter');
+    expect(toast?.style.getPropertyValue('--notify-exit-animation')).toBe('240ms ease-in custom-exit');
+
+    toast?.classList.add('is-leaving');
+    expect(toast?.style.getPropertyValue('--notify-exit-animation')).toBe('240ms ease-in custom-exit');
+  });
 });

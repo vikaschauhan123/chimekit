@@ -44,13 +44,16 @@ export function applyAnimationConfig(element: HTMLElement, animation?: Animation
   if (enter) {
    if (BUILT_IN_ANIMATIONS.has(enter)) {
      element.dataset.animationEnter = enter;
+     element.style.removeProperty('--notify-enter-animation');
      element.style.removeProperty('animation');
    } else {
      delete element.dataset.animationEnter;
-     element.style.animation = enter;
+     element.style.setProperty('--notify-enter-animation', enter);
+     element.style.removeProperty('animation');
    }
   } else {
    delete element.dataset.animationEnter;
+   element.style.removeProperty('--notify-enter-animation');
    element.style.removeProperty('animation');
   }
 
@@ -61,7 +64,6 @@ export function applyAnimationConfig(element: HTMLElement, animation?: Animation
    } else {
      delete element.dataset.animationExit;
      element.style.setProperty('--notify-exit-animation', exit);
-     element.style.animation = exit;
    }
   } else {
    delete element.dataset.animationExit;

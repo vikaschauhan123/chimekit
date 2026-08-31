@@ -98,9 +98,11 @@ export class Stack {
     } else {
       el.classList.add('is-leaving');
       el.classList.remove('notify-toast--collapsed');
+      el.style.removeProperty('animation');
+      el.style.removeProperty('--notify-enter-animation');
       const customExit = el.style.getPropertyValue('--notify-exit-animation');
       if (customExit) {
-        el.style.animation = customExit;
+        el.style.setProperty('--notify-exit-animation', customExit);
       }
       el.addEventListener('animationend', () => el.remove(), { once: true });
       setTimeout(() => el.remove(), 200); // fallback if the animation is skipped/disabled
