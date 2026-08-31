@@ -316,6 +316,30 @@
             <option value="dark">dark</option>
           </select>
         </div>
+        <div class="field">
+          Enter animation
+          <select id="globalEnterAnimation">
+            <option value="none" selected>none</option>
+            <option value="fade-in">fade-in</option>
+            <option value="slide-left">slide-left</option>
+            <option value="slide-right">slide-right</option>
+            <option value="slide-top">slide-top</option>
+            <option value="slide-bottom">slide-bottom</option>
+            <option value="zoom-in">zoom-in</option>
+          </select>
+        </div>
+        <div class="field">
+          Exit animation
+          <select id="globalExitAnimation">
+            <option value="none" selected>none</option>
+            <option value="fade-out">fade-out</option>
+            <option value="slide-left">slide-left</option>
+            <option value="slide-right">slide-right</option>
+            <option value="slide-top">slide-top</option>
+            <option value="slide-bottom">slide-bottom</option>
+            <option value="zoom-out">zoom-out</option>
+          </select>
+        </div>
         <label class="toggle"><input type="checkbox" id="singleAtATime" /> singleAtATime</label>
         <label class="toggle"><input type="checkbox" id="backdropEnabled" /> backdrop</label>
         <label class="toggle"><input type="checkbox" id="backdropCloseOnClick" /> close on backdrop click</label>
@@ -413,6 +437,7 @@
       <div class="row">
         <button class="btn" id="btn-actions">Error with actions</button>
         <button class="btn" id="btn-html-message">Custom HTML message</button>
+        <button class="btn" id="btn-animated-toast">Toast-level animation</button>
         <button class="btn" id="btn-bare">Bare message (no chrome)</button>
         <button class="btn" id="btn-infinite-unique">Notification-level dedupe (unique: "sync")</button>
         <button class="btn" id="btn-stack">Stack 6 notifications</button>
@@ -509,6 +534,12 @@
     notify.on('action', (p) => writeLog('action', `action ${p.id} -> ${p.actionId}`));
 
     function currentConfig() {
+      const enter = document.getElementById('globalEnterAnimation').value;
+      const exit = document.getElementById('globalExitAnimation').value;
+      const animation = {};
+      if (enter !== 'none') animation.enter = enter;
+      if (exit !== 'none') animation.exit = exit;
+
       return {
         position: document.getElementById('position').value,
         singleAtATime: document.getElementById('singleAtATime').checked,
@@ -518,6 +549,7 @@
         },
         theme: document.getElementById('theme').value,
         maxVisible: 3,
+        ...(Object.keys(animation).length ? { animation } : {}),
       };
     }
     function applyConfig() {
@@ -546,12 +578,16 @@
 
     function renderGlobalConfigCode() {
       const cfg = currentConfig();
+      const animationLines = cfg.animation
+        ? `\n  animation: {\n    enter: '${cfg.animation.enter ?? 'none'}',\n    exit: '${cfg.animation.exit ?? 'none'}',\n  },`
+        : '';
+
       document.getElementById('code-global-config').textContent = `configure({
   position: '${cfg.position}',
   singleAtATime: ${cfg.singleAtATime},
   backdrop: { enabled: ${cfg.backdrop.enabled}, closeOnClick: ${cfg.backdrop.closeOnClick} },
   theme: '${cfg.theme}',
-  maxVisible: ${cfg.maxVisible},
+  maxVisible: ${cfg.maxVisible},${animationLines}
 });`;
     }
 
@@ -643,34 +679,44 @@ ${timerLinesFor(actionsTimerOptions())}
   },
 });
 
+notify.success({
+title: 'Toast-level animation',
+message: 'Slide in from the left, fade out on close.',
+duration: 3000,
+animation: {
+  enter: 'slide-left',
+  exit: 'zoom-out',
+},
+});
+
 // [data-notify-countdown] (exported as COUNTDOWN_SLOT_ATTR) marks exactly where the countdown
 // lands — anything after that marker in the HTML renders after the countdown too.
 notify.custom({
-  title: 'Custom HTML message',
-  message: { html: '${HTML_MESSAGE_MARKUP}' },
+title: 'Custom HTML message',
+message: { html: '${HTML_MESSAGE_MARKUP}' },
 ${timerLinesFor(htmlMessageTimerOptions())}
 });
-
+ 
 notify.custom({
-  icon: false,
-  message: 'Copied to clipboard',
-  duration: 1500,
-  timerStyle: 'none',
-  showCloseButton: false,
+icon: false,
+message: 'Copied to clipboard',
+duration: 1500,
+timerStyle: 'none',
+showCloseButton: false,
 });
-
+ 
 const id = notify.info({ message: 'Syncing…', duration: 'infinite', unique: 'sync' });
 notify.close(id); // e.g. once the async work resolves
-
+ 
 ['success', 'error', 'warning', 'info'].forEach((type, i) => notify[type]({
-  title: \`Notification \${i + 1}\`,
-  message: 'Part of a stacked group.',
-  duration: 8000,
-  timerStyle: '${timerStyle()}',
+title: \`Notification \${i + 1}\`,
+message: 'Part of a stacked group.',
+duration: 8000,
+timerStyle: '${timerStyle()}',
 }));
-
+ 
 notify.clearAll();`;
-    }
+  }
 
     function renderCustomColorsCode() {
       const bg = document.getElementById('customBg').value;
@@ -715,8 +761,9 @@ notify.close(id); // closes that exact notification`;
 
     [
       'position', 'singleAtATime', 'backdropEnabled', 'backdropCloseOnClick', 'theme', 'timerStyle',
-      'defaultTypeUseColors', 'defaultTypeBg', 'defaultTypeText', 'customBg', 'customText',
-      'actionsTimerStyle', 'htmlMessageTimerStyle', 'defaultTypeUseIcon', 'defaultTypeIconValue',
+      'globalEnterAnimation', 'globalExitAnimation', 'defaultTypeUseColors', 'defaultTypeBg',
+      'defaultTypeText', 'customBg', 'customText', 'actionsTimerStyle', 'htmlMessageTimerStyle',
+      'defaultTypeUseIcon', 'defaultTypeIconValue',
     ].forEach((id) => document.getElementById(id).addEventListener('change', refreshEverything));
     refreshEverything();
 
@@ -782,6 +829,18 @@ notify.close(id); // closes that exact notification`;
         title: 'Custom HTML message',
         message: { html: HTML_MESSAGE_MARKUP },
         ...htmlMessageTimerOptions(),
+      });
+    });
+
+    document.getElementById('btn-animated-toast').addEventListener('click', () => {
+      notify.success({
+        title: 'Toast-level animation',
+        message: 'Slide in from the left, zoom out on close.',
+        duration: 3000,
+        animation: {
+          enter: 'slide-left',
+          exit: 'zoom-out',
+        },
       });
     });
 

@@ -40,9 +40,21 @@ export interface BackdropConfig {
   dismissBehavior?: 'auto-and-manual';
 }
 
+export type ToastAnimation =
+  | 'none'
+  | 'fade'
+  | 'fade-in'
+  | 'fade-out'
+  | 'slide-left'
+  | 'slide-right'
+  | 'slide-top'
+  | 'slide-bottom'
+  | 'zoom-in'
+  | 'zoom-out';
+
 export interface AnimationConfig {
-  enter?: string;
-  exit?: string;
+  enter?: ToastAnimation | string;
+  exit?: ToastAnimation | string;
 }
 
 export interface GlobalConfig {
@@ -85,6 +97,7 @@ export interface NotificationOptions {
   duration?: number | 'infinite';
   timerStyle?: TimerStyle;
   backdrop?: boolean | BackdropConfig;
+  animation?: AnimationConfig;
   unique?: boolean | string;
   data?: Record<string, unknown>;
   pauseOnHover?: boolean;
@@ -109,6 +122,7 @@ export interface ResolvedNotificationOptions extends NotificationOptions {
   timerStyle: TimerStyle;
   showCloseButton: boolean;
   pauseOnHover: boolean;
+  animation: AnimationConfig;
 }
 
 export interface OpenEventPayload {

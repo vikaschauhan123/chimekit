@@ -86,7 +86,32 @@ notify.custom({
   duration: 5000,
 });
 ```
+ 
+### Global and per-toast animation
 
+Use the same animation config at the library level or override it on a single notification.
+Supported presets include `fade-in` / `fade-out`, `slide-left`, `slide-right`, `slide-top`,
+`slide-bottom`, and `zoom-in` / `zoom-out`.
+
+```js
+configure({
+ animation: {
+   enter: 'slide-left',
+   exit: 'fade-out',
+ },
+});
+
+notify.success({
+ title: 'Saved',
+ message: 'Your profile was updated.',
+ duration: 2500,
+ animation: {
+   enter: 'zoom-in',
+   exit: 'slide-top',
+ },
+});
+```
+ 
 ### Notification-level dedupe
 
 Use `unique` on a toast to keep only one visible instance of that notification at a time. If a new
