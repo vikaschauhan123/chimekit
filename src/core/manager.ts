@@ -9,6 +9,8 @@ import type {
   CloseReason,
   GlobalConfig,
   NotificationOptions,
+  NotificationSoundConfig,
+  NotificationSoundPreset,
   NotificationType,
   NotifyEventMap,
   Position,
@@ -34,12 +36,57 @@ const DEFAULT_GLOBAL_CONFIG: ResolvedGlobalConfig = {
   maxVisible: 3,
   duplicateStrategy: 'ignore',
   animation: {},
+  sound: false,
   theme: 'auto',
   zIndex: 2147483000,
   rtl: false,
   newestOn: 'top',
   pauseOnHover: true,
 };
+
+function resolveSoundPreset(type: NotificationType): NotificationSoundPreset {
+  switch (type) {
+    case 'success':
+      return 'success';
+    case 'error':
+      return 'error';
+    case 'warning':
+      return 'warning';
+    case 'info':
+      return 'info';
+    default:
+      return 'default';
+  }
+}
+
+function resolveSoundConfig(
+  type: NotificationType,
+  perCall: NotificationSoundConfig | false | undefined,
+  global: NotificationSoundConfig | false | undefined,
+): NotificationSoundConfig | false {
+  if (perCall === false) return false;
+  if (perCall && typeof perCall === 'object') {
+    const enabled = perCall.enabled ?? true;
+    if (!enabled) return false;
+    return {
+      enabled,
+      src: perCall.src,
+      preset: perCall.preset ?? resolveSoundPreset(type),
+      volume: Math.min(Math.max(perCall.volume ?? 0.45, 0), 1),
+    };
+  }
+  if (global && typeof global === 'object') {
+    const enabled = global.enabled ?? true;
+    if (!enabled) return false;
+    return {
+      enabled,
+      src: global.src,
+      preset: global.preset ?? resolveSoundPreset(type),
+      volume: Math.min(Math.max(global.volume ?? 0.45, 0), 1),
+    };
+  }
+  return false;
+}
 
 function resolveUniqueKey(options: NotificationOptions): string | null {
   if (!options.unique) return null;
@@ -87,6 +134,7 @@ export class NotificationManager {
       ...config,
       backdrop: { ...this.config.backdrop, ...config.backdrop },
       animation: { ...this.config.animation, ...config.animation },
+      sound: config.sound !== undefined ? config.sound : this.config.sound,
     };
     this.root = ensureRoot(this.config.zIndex);
     this.applyTheme();
@@ -134,6 +182,7 @@ export class NotificationManager {
     const duration: number | 'infinite' =
       options.duration === undefined || options.duration === 0 ? 'infinite' : options.duration;
     const backdrop = resolveBackdrop(options.backdrop, this.config.backdrop);
+    const sound = resolveSoundConfig(type, options.sound, this.config.sound);
 
     const resolved: ResolvedNotificationOptions = {
       ...options,
@@ -148,6 +197,7 @@ export class NotificationManager {
         enter: options.animation?.enter ?? this.config.animation.enter,
         exit: options.animation?.exit ?? this.config.animation.exit,
       },
+      sound,
     };
 
     const elements = createNotificationElement(resolved, {
@@ -193,6 +243,7 @@ export class NotificationManager {
     }
 
     timer?.start();
+    this.playNotificationSound(type, resolved.sound);
     resolved.onOpen?.(id);
     this.emitter.emit('open', { id, type });
 
@@ -267,6 +318,68 @@ export class NotificationManager {
       const targetId = focused?.dataset.id ?? this.mostRecentId();
       if (targetId) this.closeInternal(targetId, 'manual-close-icon');
     });
+  }
+
+  private playNotificationSound(type: NotificationType, sound: NotificationSoundConfig | false): void {
+    if (!sound || sound.enabled === false) return;
+
+    const volume = Math.min(Math.max(sound.volume ?? 0.7, 0), 1);
+
+    if (sound.src && typeof Audio !== 'undefined') {
+      const audio = new Audio(sound.src);
+      audio.volume = volume;
+      void audio.play().catch(() => undefined);
+      return;
+    }
+
+    const tonePattern = this.createAudioTonePattern(sound.preset ?? resolveSoundPreset(type));
+    if (!tonePattern) return;
+
+    const AudioCtor =
+      (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext ??
+      (typeof AudioContext !== 'undefined' ? AudioContext : undefined);
+    if (!AudioCtor) return;
+
+    const context = new AudioCtor();
+    const gain = context.createGain();
+    gain.gain.value = 0.0001;
+    gain.connect(context.destination);
+
+    const start = context.currentTime + 0.02;
+    for (let i = 0; i < tonePattern.length; i += 1) {
+      const oscillator = context.createOscillator();
+      const noteGain = context.createGain();
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(tonePattern[i], start + i * 0.12);
+      noteGain.gain.setValueAtTime(0.0001, start + i * 0.12);
+      noteGain.gain.exponentialRampToValueAtTime(volume, start + i * 0.12 + 0.02);
+      noteGain.gain.exponentialRampToValueAtTime(0.0001, start + i * 0.12 + 0.18);
+      oscillator.connect(noteGain);
+      noteGain.connect(gain);
+      oscillator.start(start + i * 0.12);
+      oscillator.stop(start + i * 0.12 + 0.2);
+    }
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + tonePattern.length * 0.12 + 0.18);
+    void context.resume().catch(() => undefined);
+  }
+
+  private createAudioTonePattern(preset: NotificationSoundPreset): number[] | null {
+    const basePattern: Record<NotificationSoundPreset, number[]> = {
+      none: [],
+      default: [440, 660],
+      success: [523.25, 659.25, 783.99],
+      error: [220, 180, 140],
+      warning: [392, 349, 294],
+      info: [587, 698, 784],
+      'os-1': [440, 660, 880],
+      'os-2': [523.25, 659.25, 784],
+      'os-3': [392, 587, 698],
+      'os-4': [330, 440, 550],
+      'os-5': [349, 523.25, 659.25],
+      'os-6': [392, 494, 659.25],
+    };
+    if (preset === 'none') return null;
+    return basePattern[preset] ?? basePattern.default;
   }
 
   private mostRecentId(): string | undefined {

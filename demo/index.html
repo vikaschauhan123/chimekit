@@ -3,917 +3,1412 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ChimeKit — demo</title>
+  <title>ChimeKit — demo playground</title>
   <link rel="stylesheet" href="../dist/style.css" />
   <style>
     :root {
-      --bg-0: #eef0f5;
-      --bg-1: #ffffff;
-      --ink: #16161a;
-      --muted: #6b6b76;
-      --border: rgba(20, 20, 30, 0.08);
-      --card-shadow: 0 1px 2px rgba(20, 20, 30, 0.04), 0 8px 24px rgba(20, 20, 30, 0.06);
-      --accent: #6d5bf6;
-      --accent-2: #22a55e;
-      --accent-3: #e5484d;
-      --accent-4: #e59d00;
-      --accent-5: #3b82f6;
-      --radius-lg: 20px;
-      --radius-md: 12px;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg-0: #0f0f13;
-        --bg-1: #1a1a20;
-        --ink: #f2f2f5;
-        --muted: #9a9aa4;
-        --border: rgba(255, 255, 255, 0.08);
-        --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
-      }
+      --bg: #f5f7fb;
+      --bg-strong: #edf1f9;
+      --panel: rgba(255,255,255,0.85);
+      --panel-strong: #ffffff;
+      --ink: #141821;
+      --muted: #5d6472;
+      --line: rgba(20,22,29,0.08);
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+      --accent: #6d5ef6;
+      --accent-2: #2ab673;
+      --accent-3: #ef5d5d;
+      --accent-4: #f1b955;
+      --accent-5: #3c82f6;
+      --radius: 20px;
+      --radius-sm: 12px;
+      --radius-xs: 10px;
     }
 
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-      color: var(--ink);
       min-height: 100vh;
+      font-family: Inter, "Segoe UI", sans-serif;
+      color: var(--ink);
       background:
-        radial-gradient(900px 480px at 12% -10%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
-        radial-gradient(700px 420px at 100% 0%, color-mix(in srgb, var(--accent-5) 14%, transparent), transparent 60%),
-        var(--bg-0);
+        radial-gradient(circle at top left, rgba(109,94,246,0.18), transparent 22%),
+        radial-gradient(circle at top right, rgba(60,130,246,0.14), transparent 28%),
+        linear-gradient(180deg, var(--bg), #eef3fb 100%);
+    }
+
+    .page {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 48px 24px 72px;
     }
 
     .hero {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 64px 24px 8px;
+      padding: 20px 6px 22px;
     }
+
     .eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font: 600 11.5px/1 system-ui, sans-serif;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--accent);
-      background: color-mix(in srgb, var(--accent) 12%, transparent);
-      padding: 6px 10px;
+      gap: 8px;
+      padding: 8px 12px;
       border-radius: 999px;
-      margin-bottom: 18px;
+      background: rgba(109, 94, 246, 0.1);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid rgba(109, 94, 246, 0.14);
     }
     .eyebrow .dot {
-      width: 6px; height: 6px; border-radius: 50%;
+      width: 8px; height: 8px; border-radius: 50%;
       background: var(--accent-2);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-2) 25%, transparent);
-    }
-    h1 {
-      font-size: clamp(30px, 5vw, 42px);
-      line-height: 1.05;
-      margin: 0 0 10px;
-      letter-spacing: -0.02em;
-      background: linear-gradient(120deg, var(--ink), var(--accent) 120%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    p.sub {
-      color: var(--muted);
-      margin: 0 0 8px;
-      font-size: 15px;
-      max-width: 56ch;
+      box-shadow: 0 0 0 4px rgba(42,182,115,0.18);
     }
 
-    main {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 24px 24px 90px;
+    h1 {
+      margin: 18px 0 8px;
+      font-size: clamp(2.2rem, 4vw, 4rem);
+      line-height: 1.02;
+      letter-spacing: -0.06em;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1.9fr;
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 24px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.3);
+    }
+
+    .panel-header h2 {
+      margin: 0;
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .panel-body { padding: 20px; }
+
+    #demo-log {
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(15, 23, 42, 0.02);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .demo-log-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.4);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .demo-log-clear {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.7);
+      color: var(--ink);
+      padding: 7px 12px;
+      font: inherit;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .demo-log-list {
+      display: grid;
+      gap: 10px;
+      max-height: 260px;
+      overflow: auto;
+      padding: 16px;
+    }
+
+    .demo-log-entry {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .demo-log-entry strong {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.74rem;
+      letter-spacing: 0.02em;
+    }
+
+    .demo-log-entry.open {
+      background: rgba(42, 182, 115, 0.12);
+      border-color: rgba(42, 182, 115, 0.28);
+      color: #0d6b42;
+    }
+
+    .demo-log-entry.close {
+      background: rgba(239, 93, 93, 0.1);
+      border-color: rgba(239, 93, 93, 0.28);
+      color: #9c1d2a;
+    }
+
+    .demo-log-entry.action {
+      background: rgba(60, 130, 246, 0.08);
+      border-color: rgba(60, 130, 246, 0.22);
+      color: #1a4aa8;
+    }
+
+    .demo-log-label {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 0.64rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.7);
+    }
+
+    .controls {
+      display: grid;
+      gap: 15px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .field select,
+    .field input[type="color"],
+    .field input[type="text"],
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xs);
+      background: rgba(255,255,255,0.7);
+      color: var(--ink);
+      font: inherit;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .field select:focus,
+    .field input:focus,
+    .field textarea:focus {
+      border-color: rgba(109,94,246,0.5);
+      box-shadow: 0 0 0 4px rgba(109,94,246,0.08);
+    }
+    .field textarea {
+      resize: vertical;
+      min-height: 110px;
+      line-height: 1.5;
+    }
+    .field.inline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xs);
+      background: rgba(255,255,255,0.6);
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .toggle input {
+      width: 16px; height: 16px;
+      accent-color: var(--accent);
+    }
+
+    .example-list {
       display: grid;
       gap: 18px;
     }
 
-    section.card {
-      padding: 22px;
-      border-radius: var(--radius-lg);
-      background: var(--bg-1);
-      border: 1px solid var(--border);
-      box-shadow: var(--card-shadow);
-    }
-    section.card h2 {
-      font-size: 12.5px;
-      margin: 0 0 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-      font-weight: 700;
-    }
-    section.card p.hint {
-      margin: 0 0 16px;
-      font-size: 13px;
-      color: var(--muted);
+    .example {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      display: grid;
+      gap: 16px;
     }
 
-    .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-
-    .field {
+    .example-head {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .example-head h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+    .example-head p {
+      margin: 6px 0 0;
       color: var(--muted);
-      background: color-mix(in srgb, var(--ink) 4%, transparent);
-      border: 1px solid var(--border);
-      padding: 6px 8px 6px 12px;
-      border-radius: 10px;
-    }
-    .field select {
-      font: 600 13px/1 inherit;
-      color: var(--ink);
-      background: transparent;
-      border: none;
-      outline: none;
-      padding: 4px 2px;
-    }
-    .field input[type='color'] {
-      width: 26px;
-      height: 26px;
-      padding: 0;
-      border: none;
-      border-radius: 7px;
-      background: transparent;
-      cursor: pointer;
-    }
-
-    /* Demo-only icon font stand-in — proves `icon` can be a plain CSS class name, without pulling
-       in a real icon font just for this example. */
-    .demo-star-icon::before {
-      content: '⭐';
-      font-size: 15px;
-      line-height: 20px;
-    }
-    label.toggle {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--muted);
-      background: color-mix(in srgb, var(--ink) 4%, transparent);
-      border: 1px solid var(--border);
-      padding: 8px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      user-select: none;
-    }
-    label.toggle input { accent-color: var(--accent); width: 15px; height: 15px; }
-
-    button.btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font: 600 13px/1 inherit;
-      color: var(--ink);
-      padding: 11px 16px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--bg-1);
-      cursor: pointer;
-      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
-      transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
-    }
-    button.btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(20, 20, 30, 0.10);
-      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
-    }
-    button.btn:active { transform: translateY(0); }
-    button.btn .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
-    button.btn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-    button.btn:disabled:hover {
-      transform: none;
-      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
-      border-color: var(--border);
-    }
-
-    button.btn--primary {
-      background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 60%, var(--accent-5)));
-      color: #fff;
-      border-color: transparent;
-    }
-    button.btn--ghost {
-      background: transparent;
+      font-size: 0.9rem;
+      line-height: 1.5;
     }
 
     .badge {
-      font: 700 10.5px/1 system-ui, sans-serif;
-      letter-spacing: 0.03em;
-      padding: 3px 7px;
-      border-radius: 999px;
-      color: #fff;
-    }
-
-    pre#log {
-      margin: 0;
-      max-height: 220px;
-      overflow: auto;
-      font: 12.5px/1.6 ui-monospace, 'SF Mono', Menlo, monospace;
-      color: var(--muted);
-      background: color-mix(in srgb, var(--ink) 4%, transparent);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-    }
-    pre#log .open { color: var(--accent-2); }
-    pre#log .close { color: var(--accent-3); }
-    pre#log .action { color: var(--accent-5); }
-
-    details.code-panel {
-      margin-top: 14px;
-    }
-    details.code-panel summary {
-      cursor: pointer;
-      font: 600 12px/1 system-ui, sans-serif;
-      color: var(--accent);
-      list-style: none;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      min-width: 70px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent-5));
+      box-shadow: 0 10px 18px rgba(109,94,246,0.18);
+    }
+
+    .example-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button.demo-btn {
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: linear-gradient(180deg, #ffffff, #f5f7fb);
+      color: var(--ink);
+      font: 700 0.92rem/1.1 inherit;
+      padding: 11px 15px;
+      cursor: pointer;
+      transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+    }
+    button.demo-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(109,94,246,0.28);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+    }
+    button.demo-btn.primary {
+      background: linear-gradient(135deg, var(--accent), #8577ff);
+      color: #fff;
+      border-color: transparent;
+    }
+    button.demo-btn.ghost {
+      background: transparent;
+    }
+
+    details.code-panel {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.02);
+      overflow: hidden;
+    }
+    details.code-panel summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 12px 14px;
+      font-weight: 700;
+      color: var(--accent);
       user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     details.code-panel summary::-webkit-details-marker { display: none; }
     details.code-panel summary::before {
       content: '▸';
-      font-size: 10px;
+      font-size: 0.75rem;
+      transition: transform 0.15s ease;
       display: inline-block;
-      transition: transform 120ms ease;
     }
-    details.code-panel[open] summary::before {
-      transform: rotate(90deg);
-    }
+    details.code-panel[open] summary::before { transform: rotate(90deg); }
     details.code-panel pre {
-      margin: 10px 0 0;
-      padding: 14px 16px;
-      border-radius: var(--radius-md);
-      background: color-mix(in srgb, var(--ink) 5%, transparent);
-      overflow-x: auto;
-      max-height: 320px;
-      overflow-y: auto;
-    }
-    details.code-panel code {
-      font: 12.5px/1.6 ui-monospace, 'SF Mono', Menlo, monospace;
+      margin: 0;
+      padding: 0 14px 14px;
+      overflow: auto;
+      font: 0.8rem/1.7 "SFMono-Regular", Consolas, monospace;
       color: var(--ink);
-      white-space: pre;
+      white-space: pre-wrap;
     }
 
-    footer {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 24px 60px;
+    .helper-text {
+      margin: 0;
       color: var(--muted);
-      font-size: 12.5px;
+      font-size: 0.84rem;
+      line-height: 1.5;
     }
-    footer a { color: inherit; }
+
+    .sound-preset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .sound-preset-btn {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.65);
+      color: var(--ink);
+      font: 700 0.76rem/1.2 inherit;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+    }
+
+    .sound-preset-btn:hover {
+      border-color: rgba(109,94,246,0.28);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 12px rgba(15, 23, 42, 0.06);
+    }
+
+    .sound-preset-btn.is-active {
+      background: rgba(109,94,246,0.1);
+      border-color: rgba(109,94,246,0.3);
+      color: var(--accent);
+    }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
-  <div class="hero">
-    <span class="eyebrow"><span class="dot"></span> ChimeKit · playground</span>
-    <h1>Framework-agnostic notifications,<br />macOS-style.</h1>
-    <p class="sub">Stacked toasts, timers, backdrops, dedupe, and singleAtATime — all driven by the
-      imperative <code>notify</code> API. Click anything below to try it live.</p>
+  <div class="page">
+    <header class="hero">
+      <span class="eyebrow"><span class="dot"></span> ChimeKit playground</span>
+      <h1>Notifications that feel native.</h1>
+      <p class="subtitle">Tune the global defaults, fire examples, and edit the live configuration to see how each toast behaves in real time.</p>
+      <div class="hero-actions" style="margin-top:18px; display:flex; gap:12px; flex-wrap:wrap;">
+        <button type="button" class="demo-btn primary" id="open-all-demo-notifications">Open all notification types</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <aside class="stack">
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Global settings</h2>
+          </div>
+          <div class="panel-body controls">
+            <label class="field">
+              Position
+              <select id="global-position">
+                <option value="top-right" selected>top-right</option>
+                <option value="top-left">top-left</option>
+                <option value="top-center">top-center</option>
+                <option value="bottom-right">bottom-right</option>
+                <option value="bottom-left">bottom-left</option>
+                <option value="bottom-center">bottom-center</option>
+              </select>
+            </label>
+
+            <label class="field">
+              Theme
+              <select id="global-theme">
+                <option value="auto" selected>auto</option>
+                <option value="light">light</option>
+                <option value="dark">dark</option>
+              </select>
+            </label>
+
+            <label class="field">
+              Default timer style
+              <select id="global-timer-style">
+                <option value="progress-bar" selected>progress-bar</option>
+                <option value="countdown-number">countdown-number</option>
+                <option value="none">none</option>
+              </select>
+            </label>
+
+            <label class="field">
+              Default notification sound
+              <select id="global-sound">
+                <option value="none" selected>none</option>
+                <option value="default">default</option>
+                <option value="success">success</option>
+                <option value="error">error</option>
+                <option value="warning">warning</option>
+                <option value="info">info</option>
+                <option value="os-1">os-1</option>
+                <option value="os-2">os-2</option>
+                <option value="os-3">os-3</option>
+                <option value="os-4">os-4</option>
+                <option value="os-5">os-5</option>
+                <option value="os-6">os-6</option>
+              </select>
+            </label>
+
+            <div class="field">
+              <span>Default sound preview</span>
+              <div id="sound-preset-buttons" class="sound-preset-grid"></div>
+            </div>
+
+            <label class="field">
+              Enter animation
+              <select id="global-enter">
+                <option value="none" selected>none</option>
+                <option value="fade-in">fade-in</option>
+                <option value="slide-left">slide-left</option>
+                <option value="slide-right">slide-right</option>
+                <option value="slide-top">slide-top</option>
+                <option value="slide-bottom">slide-bottom</option>
+                <option value="zoom-in">zoom-in</option>
+              </select>
+            </label>
+
+            <label class="field">
+              Exit animation
+              <select id="global-exit">
+                <option value="none" selected>none</option>
+                <option value="fade-out">fade-out</option>
+                <option value="slide-left">slide-left</option>
+                <option value="slide-right">slide-right</option>
+                <option value="slide-top">slide-top</option>
+                <option value="slide-bottom">slide-bottom</option>
+                <option value="zoom-out">zoom-out</option>
+              </select>
+            </label>
+
+            <div class="field inline">
+              <label class="toggle"><input type="checkbox" id="global-single-at-a-time" /> singleAtATime</label>
+            </div>
+            <div class="field inline">
+              <label class="toggle"><input type="checkbox" id="global-backdrop" /> backdrop</label>
+            </div>
+            <div class="field inline">
+              <label class="toggle"><input type="checkbox" id="global-backdrop-click" /> close on backdrop click</label>
+            </div>
+
+            <details class="code-panel" open>
+              <summary>Global config code</summary>
+              <pre id="global-config-code"></pre>
+            </details>
+          </div>
+        </section>
+      </aside>
+
+      <main class="stack">
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Notification examples</h2>
+          </div>
+          <div class="panel-body example-list">
+            <article class="example">
+              <div class="example-head">
+                <div>
+                  <h3>Success toast</h3>
+                  <p>Default type, default styling, and clean success feedback.</p>
+                </div>
+                <span class="badge" style="background: linear-gradient(135deg, var(--accent-2), #1ca867);">success</span>
+              </div>
+              <div class="example-actions">
+                <button class="demo-btn primary" data-demo="success">Fire example</button>
+              </div>
+              <details class="code-panel">
+                <summary>Show code</summary>
+                <pre data-code="success"></pre>
+              </details>
+            </article>
+
+            <article class="example">
+              <div class="example-head">
+                <div>
+                  <h3>Error alert</h3>
+                  <p>Use for failed actions, validation issues, or critical feedback.</p>
+                </div>
+                <span class="badge" style="background: linear-gradient(135deg, var(--accent-3), #d94b4b);">error</span>
+              </div>
+              <div class="example-actions">
+                <button class="demo-btn primary" data-demo="error">Fire example</button>
+              </div>
+              <details class="code-panel">
+                <summary>Show code</summary>
+                <pre data-code="error"></pre>
+              </details>
+            </article>
+
+            <article class="example">
+              <div class="example-head">
+                <div>
+                  <h3>Warning and info</h3>
+                  <p>Useful for optional follow-up, caution, and informative updates.</p>
+                </div>
+                <span class="badge" style="background: linear-gradient(135deg, var(--accent-4), #dca235);">warning</span>
+              </div>
+              <div class="example-actions">
+                <button class="demo-btn primary" data-demo="warning">Warning</button>
+                <button class="demo-btn ghost" data-demo="info">Info</button>
+              </div>
+              <details class="code-panel">
+                <summary>Show code</summary>
+                <pre data-code="warning-info"></pre>
+              </details>
+            </article>
+
+            <article class="example">
+              <div class="example-head">
+                <div>
+                  <h3>Timer styles</h3>
+                  <p>Progress, countdown, silent, and infinite behavior.</p>
+                </div>
+                <span class="badge" style="background: linear-gradient(135deg, var(--accent-5), #296fdd);">timers</span>
+              </div>
+              <div class="example-actions">
+                <button class="demo-btn primary" data-demo="timer-progress">Progress</button>
+                <button class="demo-btn" data-demo="timer-countdown">Countdown</button>
+                <button class="demo-btn" data-demo="timer-none">Silent</button>
+                <button class="demo-btn ghost" data-demo="timer-infinite">Infinite</button>
+              </div>
+              <details class="code-panel">
+                <summary>Show code</summary>
+                <pre data-code="timers"></pre>
+              </details>
+            </article>
+
+            <article class="example">
+              <div class="example-head">
+                <div>
+                  <h3>Animations</h3>
+                  <p>Set enter/exit motion globally or override it per toast.</p>
+                </div>
+                <span class="badge" style="background: linear-gradient(135deg, #8b5cf6, #a855f7);">motion</span>
+              </div>
+              <div class="example-actions">
+                <button class="demo-btn primary" data-demo="animation-toast">Fire animated toast</button>
+              </div>
+              <details class="code-panel">
+                <summary>Show code</summary>
+                <pre data-code="animation"></pre>
+              </details>
+            </article>
+
+            <article class="example">
+              <div class="example-head">
+                <div>
+                  <h3>Sound notification</h3>
+                  <p>Play a native-feeling macOS-style tone when the toast opens.</p>
+                </div>
+                <span class="badge" style="background: linear-gradient(135deg, #f43f5e, #f97316);">sound</span>
+              </div>
+              <div class="example-actions">
+                <button class="demo-btn primary" data-demo="sound-toast">Play sound toast</button>
+              </div>
+              <details class="code-panel">
+                <summary>Show code</summary>
+                <pre data-code="sound-toast-example"></pre>
+              </details>
+            </article>
+
+            <article class="example">
+              <div class="example-head">
+                <div>
+                  <h3>Custom sound file</h3>
+                  <p>Use your own audio file instead of a built-in preset.</p>
+                </div>
+                <span class="badge" style="background: linear-gradient(135deg, #ec4899, #8b5cf6);">custom</span>
+              </div>
+              <div class="example-actions" style="display:grid; gap:10px;">
+                <input id="custom-sound-file" type="file" accept="audio/*" style="width:100%; border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,0.65); padding:10px 12px; color:var(--ink);" />
+                <button class="demo-btn primary" data-demo="custom-sound-toast">Play custom sound toast</button>
+              </div>
+              <details class="code-panel">
+                <summary>Show code</summary>
+                <pre data-code="custom-sound-example"></pre>
+              </details>
+            </article>
+
+            <article class="example">
+              <div class="example-head">
+                <div>
+                  <h3>Feedback form</h3>
+                  <p>Custom toast with a text area and a submit action.</p>
+                </div>
+                <span class="badge" style="background: linear-gradient(135deg, #10b981, #059669);">form</span>
+              </div>
+              <div class="example-actions">
+                <button class="demo-btn primary" data-demo="feedback-form">Open feedback toast</button>
+              </div>
+              <details class="code-panel">
+                <summary>Show code</summary>
+                <pre data-code="feedback-form"></pre>
+              </details>
+            </article>
+
+            <article class="example">
+              <div class="example-head">
+                <div>
+                  <h3>Confirm / cancel</h3>
+                  <p>Custom confirmation toast with changeable button labels and icons.</p>
+                </div>
+                <span class="badge" style="background: linear-gradient(135deg, #f97316, #f59e0b);">confirm</span>
+              </div>
+              <div class="example-actions">
+                <button class="demo-btn primary" data-demo="confirm-toast">Open confirm toast</button>
+              </div>
+              <details class="code-panel">
+                <summary>Show code</summary>
+                <pre data-code="confirm-toast"></pre>
+              </details>
+            </article>
+
+            <article class="example">
+              <div class="example-head">
+                <div>
+                  <h3>Actions and HTML</h3>
+                  <p>Buttons, HTML messages, dedupe, stacking, and custom colors.</p>
+                </div>
+                <span class="badge" style="background: linear-gradient(135deg, #f97316, #f59e0b);">advanced</span>
+              </div>
+              <div class="example-actions">
+                <button class="demo-btn primary" data-demo="actions">Action toast</button>
+                <button class="demo-btn" data-demo="html-message">HTML message</button>
+                <button class="demo-btn" data-demo="custom-colors">Custom colors</button>
+                <button class="demo-btn ghost" data-demo="dedupe">Dedupe</button>
+                <button class="demo-btn ghost" data-demo="stack">Stack</button>
+                <button class="demo-btn ghost" data-demo="clear-all">Clear all</button>
+              </div>
+              <details class="code-panel">
+                <summary>Show code</summary>
+                <pre data-code="advanced"></pre>
+              </details>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
   </div>
-
-  <main>
-    <section class="card">
-      <h2>Global config</h2>
-      <p class="hint">Applied instantly via <code>configure()</code> — affects every notification fired below.</p>
-      <div class="row">
-        <div class="field">
-          Position
-          <select id="position">
-            <option value="top-right" selected>top-right</option>
-            <option value="top-left">top-left</option>
-            <option value="top-center">top-center</option>
-            <option value="bottom-right">bottom-right</option>
-            <option value="bottom-left">bottom-left</option>
-            <option value="bottom-center">bottom-center</option>
-          </select>
-        </div>
-        <div class="field">
-          Default timer style
-          <select id="timerStyle">
-            <option value="progress-bar" selected>progress-bar</option>
-            <option value="countdown-number">countdown-number</option>
-            <option value="none">none</option>
-          </select>
-        </div>
-        <div class="field">
-          Theme
-          <select id="theme">
-            <option value="auto" selected>auto</option>
-            <option value="light">light</option>
-            <option value="dark">dark</option>
-          </select>
-        </div>
-        <div class="field">
-          Enter animation
-          <select id="globalEnterAnimation">
-            <option value="none" selected>none</option>
-            <option value="fade-in">fade-in</option>
-            <option value="slide-left">slide-left</option>
-            <option value="slide-right">slide-right</option>
-            <option value="slide-top">slide-top</option>
-            <option value="slide-bottom">slide-bottom</option>
-            <option value="zoom-in">zoom-in</option>
-          </select>
-        </div>
-        <div class="field">
-          Exit animation
-          <select id="globalExitAnimation">
-            <option value="none" selected>none</option>
-            <option value="fade-out">fade-out</option>
-            <option value="slide-left">slide-left</option>
-            <option value="slide-right">slide-right</option>
-            <option value="slide-top">slide-top</option>
-            <option value="slide-bottom">slide-bottom</option>
-            <option value="zoom-out">zoom-out</option>
-          </select>
-        </div>
-        <label class="toggle"><input type="checkbox" id="singleAtATime" /> singleAtATime</label>
-        <label class="toggle"><input type="checkbox" id="backdropEnabled" /> backdrop</label>
-        <label class="toggle"><input type="checkbox" id="backdropCloseOnClick" /> close on backdrop click</label>
-      </div>
-      <details class="code-panel">
-        <summary>Show code</summary>
-        <pre><code id="code-global-config"></code></pre>
-      </details>
-    </section>
-
-    <section class="card">
-      <h2>Default types</h2>
-      <p class="hint">Each preset ships a default icon, accent color, and ARIA role. Optionally override
-        the background/text color, or the icon itself — <code>icon</code> accepts a CSS class name
-        (e.g. from an icon font already loaded on your page) or raw <code>&lt;svg&gt;</code> markup.</p>
-      <div class="row">
-        <button class="btn" id="btn-success"><span class="dot" style="background:var(--accent-2)"></span>success</button>
-        <button class="btn" id="btn-error"><span class="dot" style="background:var(--accent-3)"></span>error</button>
-        <button class="btn" id="btn-warning"><span class="dot" style="background:var(--accent-4)"></span>warning</button>
-        <button class="btn" id="btn-info"><span class="dot" style="background:var(--accent-5)"></span>info</button>
-      </div>
-      <div class="row" style="margin-top: 10px;">
-        <label class="toggle"><input type="checkbox" id="defaultTypeUseColors" /> custom colors</label>
-        <div class="field">
-          Background
-          <input type="color" id="defaultTypeBg" value="#111827" />
-        </div>
-        <div class="field">
-          Text
-          <input type="color" id="defaultTypeText" value="#fde68a" />
-        </div>
-      </div>
-      <div class="row" style="margin-top: 10px;">
-        <label class="toggle"><input type="checkbox" id="defaultTypeUseIcon" /> custom icon</label>
-        <div class="field" style="flex: 1; min-width: 280px;">
-          <select id="defaultTypeIconKind" style="flex: none;">
-            <option value="svg" selected>svg</option>
-            <option value="class">CSS class</option>
-          </select>
-          <input type="text" id="defaultTypeIconValue"
-            value="&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;&gt;&lt;path d=&quot;M12 2.5l2.9 6.9 7.1.9-5.2 4.9L18.2 22 12 18.3 5.8 22 7 15.2 1.8 10.3l7.1-.9z&quot;/&gt;&lt;/svg&gt;"
-            placeholder="CSS class (e.g. fa-solid fa-star) or <svg>...</svg>"
-            style="flex: 1; min-width: 0; border: none; background: transparent; outline: none; font: 600 12.5px/1.4 ui-monospace, monospace; color: var(--ink);" />
-        </div>
-      </div>
-      <details class="code-panel">
-        <summary>Show code</summary>
-        <pre><code id="code-default-types"></code></pre>
-      </details>
-    </section>
-
-    <section class="card">
-      <h2>Timer styles</h2>
-      <p class="hint">Each button below fires with an explicit <code>timerStyle</code> and a 6s duration, regardless of the global config above — so you can compare all three side by side.</p>
-      <div class="row">
-        <button class="btn" id="btn-timer-progress">Progress bar (6s)</button>
-        <button class="btn" id="btn-timer-countdown">Countdown number (6s)</button>
-        <button class="btn" id="btn-timer-none">Silent timer — none (6s)</button>
-        <button class="btn" id="btn-timer-infinite">Infinite — stays open</button>
-        <button class="btn" id="btn-timer-long-message">Long message + countdown (8s)</button>
-      </div>
-      <details class="code-panel">
-        <summary>Show code</summary>
-        <pre><code id="code-timer-styles"></code></pre>
-      </details>
-    </section>
-
-    <section class="card">
-      <h2>Custom &amp; edge cases</h2>
-      <p class="hint">Actions, custom HTML messages, bare messages, dedupe, stacking overflow, and bulk clear.
-        Actions can carry a timer too — <code>actions</code> and <code>timerStyle</code>/<code>duration</code>
-        are fully independent of each other. The HTML message also has its own progress-bar/countdown
-        timer, and marks exactly where the countdown lands with a <code>[data-notify-countdown]</code>
-        placeholder — anything after that marker in the HTML renders after the countdown.</p>
-      <div class="row" style="margin-bottom: 10px;">
-        <div class="field">
-          Actions timer style
-          <select id="actionsTimerStyle">
-            <option value="infinite" selected>infinite (no timer)</option>
-            <option value="progress-bar">progress-bar</option>
-            <option value="countdown-number">countdown-number</option>
-            <option value="none">none (6s, silent)</option>
-          </select>
-        </div>
-        <div class="field">
-          HTML message timer style
-          <select id="htmlMessageTimerStyle">
-            <option value="progress-bar" selected>progress-bar</option>
-            <option value="countdown-number">countdown-number</option>
-            <option value="none">none</option>
-            <option value="infinite">infinite (no timer)</option>
-          </select>
-        </div>
-      </div>
-      <div class="row">
-        <button class="btn" id="btn-actions">Error with actions</button>
-        <button class="btn" id="btn-html-message">Custom HTML message</button>
-        <button class="btn" id="btn-animated-toast">Toast-level animation</button>
-        <button class="btn" id="btn-bare">Bare message (no chrome)</button>
-        <button class="btn" id="btn-infinite-unique">Notification-level dedupe (unique: "sync")</button>
-        <button class="btn" id="btn-stack">Stack 6 notifications</button>
-        <button class="btn btn--ghost" id="btn-clear">clearAll()</button>
-      </div>
-      <details class="code-panel">
-        <summary>Show code</summary>
-        <pre><code id="code-edge-cases"></code></pre>
-      </details>
-    </section>
-
-    <section class="card">
-      <h2>Custom colors</h2>
-      <p class="hint">Per-notification <code>backgroundColor</code> / <code>textColor</code> — overrides the theme for just this one toast.</p>
-      <div class="row">
-        <div class="field">
-          Background
-          <input type="color" id="customBg" value="#111827" />
-        </div>
-        <div class="field">
-          Text
-          <input type="color" id="customText" value="#fde68a" />
-        </div>
-        <button class="btn" id="btn-custom-colors">Fire with custom colors</button>
-      </div>
-      <details class="code-panel">
-        <summary>Show code</summary>
-        <pre><code id="code-custom-colors"></code></pre>
-      </details>
-    </section>
-
-    <section class="card">
-      <h2>Element ids &amp; notification id tracking</h2>
-      <p class="hint">Every part of a toast gets a stable, unique DOM <code>id</code> for CSS/JS targeting
-        (<code>notify-toast-&lt;id&gt;</code>, <code>notify-message-&lt;id&gt;</code>, <code>notify-close-&lt;id&gt;</code>, …).
-        Every <code>notify.*()</code> call also returns that notification's <code>id</code>, and
-        <code>onClose(id, reason)</code> / the global <code>close</code> event report that exact same
-        <code>id</code> back — so you always know which toast opened or closed.</p>
-      <div class="row">
-        <button class="btn" id="btn-fire-tracked">Fire &amp; inspect id</button>
-        <button class="btn btn--ghost" id="btn-close-tracked" disabled>Close it (by id)</button>
-      </div>
-      <div class="row" style="margin-top: 10px;">
-        <div class="field">Last id: <code id="lastTrackedId">—</code></div>
-      </div>
-      <details class="code-panel">
-        <summary>Show code</summary>
-        <pre><code id="code-ids"></code></pre>
-      </details>
-    </section>
-
-    <section class="card">
-      <h2>Event log</h2>
-      <p class="hint"><code>notify.on('open' | 'close' | 'action', …)</code> — newest first.</p>
-      <pre id="log"></pre>
-    </section>
-  </main>
-
-  <footer>
-    Backdrop &amp; toasts share a stacking context — toasts always render above the dim overlay, so
-    clicking a toast never triggers a backdrop-click close.
-  </footer>
 
   <script src="../dist/index.global.js"></script>
   <script>
-    const { notify, configure, COUNTDOWN_SLOT_ATTR } = ChimeKit;
+    const { notify, configure } = window.ChimeKit;
 
-    const LONG_MESSAGE =
-      "This message is deliberately long, to check that word-wrap and the inline countdown-number " +
-      "timer both behave when the text runs to several lines instead of one — the countdown should " +
-      "still land right after the last word, with its usual gap, never clipped or overlapping the " +
-      "close button.";
+    const htmlMessageMarkup = `Supports <strong>bold</strong>, <em>italic</em>, and <a href="#">links</a>. <span data-notify-countdown></span> <em>— rendered right where the countdown lands.</em>`;
+    const longMessage = 'This message is intentionally long to prove the countdown style and wrapping still feel natural across multiple lines without overlapping the close action.';
+    const soundAssets = {
+      default: './sounds/mac-os-1.wav',
+      success: './sounds/mac-os-2.wav',
+      error: './sounds/mac-os-4.wav',
+      warning: './sounds/mac-os-5.wav',
+      info: './sounds/mac-os-3.wav',
+      'os-1': './sounds/mac-os-1.wav',
+      'os-2': './sounds/mac-os-2.wav',
+      'os-3': './sounds/mac-os-3.wav',
+      'os-4': './sounds/mac-os-4.wav',
+      'os-5': './sounds/mac-os-5.wav',
+      'os-6': './sounds/mac-os-6.wav',
+    };
 
-    // [data-notify-countdown] marks exactly where the countdown-number timer should render inside
-    // a { html } message — anything placed after that marker in the markup ends up after it too.
-    const HTML_MESSAGE_MARKUP =
-      `Supports <strong>bold</strong>, <em>italic</em>, and <a href="#">links</a>. ` +
-      `<span ${COUNTDOWN_SLOT_ATTR}></span> <em>— custom HTML can even follow the countdown.</em>`;
+    const soundPresets = ['default', 'success', 'error', 'warning', 'info', 'os-1', 'os-2', 'os-3', 'os-4', 'os-5', 'os-6'];
 
-    const SVG_STAR_ICON =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.9 6.9 7.1.9-5.2 4.9L18.2 22 12 18.3 5.8 22 7 15.2 1.8 10.3l7.1-.9z"/></svg>';
-    const CLASS_STAR_ICON = 'demo-star-icon';
+    const globalElements = {
+      position: document.getElementById('global-position'),
+      theme: document.getElementById('global-theme'),
+      timerStyle: document.getElementById('global-timer-style'),
+      sound: document.getElementById('global-sound'),
+      enter: document.getElementById('global-enter'),
+      exit: document.getElementById('global-exit'),
+      singleAtATime: document.getElementById('global-single-at-a-time'),
+      backdrop: document.getElementById('global-backdrop'),
+      backdropClick: document.getElementById('global-backdrop-click'),
+      configCode: document.getElementById('global-config-code')
+    };
 
-    const log = document.getElementById('log');
-    function writeLog(kind, line) {
-      const span = document.createElement('div');
-      span.className = kind;
-      span.textContent = line;
-      log.prepend(span);
-      while (log.childNodes.length > 200) log.removeChild(log.lastChild);
-    }
-    notify.on('open', (p) => writeLog('open', `open   ${p.type} ${p.id}`));
-    notify.on('close', (p) => writeLog('close', `close  ${p.type} ${p.id} (${p.reason})`));
-    notify.on('action', (p) => writeLog('action', `action ${p.id} -> ${p.actionId}`));
-
-    function currentConfig() {
-      const enter = document.getElementById('globalEnterAnimation').value;
-      const exit = document.getElementById('globalExitAnimation').value;
+    function globalConfig() {
       const animation = {};
-      if (enter !== 'none') animation.enter = enter;
-      if (exit !== 'none') animation.exit = exit;
+      if (globalElements.enter.value !== 'none') animation.enter = globalElements.enter.value;
+      if (globalElements.exit.value !== 'none') animation.exit = globalElements.exit.value;
+
+      const soundValue = globalElements.sound.value;
+      const sound = soundValue === 'none'
+        ? false
+        : { preset: soundValue, src: soundAssets[soundValue] || undefined, volume: 0.45 };
 
       return {
-        position: document.getElementById('position').value,
-        singleAtATime: document.getElementById('singleAtATime').checked,
-        backdrop: {
-          enabled: document.getElementById('backdropEnabled').checked,
-          closeOnClick: document.getElementById('backdropCloseOnClick').checked,
-        },
-        theme: document.getElementById('theme').value,
+        position: globalElements.position.value,
+        theme: globalElements.theme.value,
         maxVisible: 3,
+        singleAtATime: globalElements.singleAtATime.checked,
+        backdrop: {
+          enabled: globalElements.backdrop.checked,
+          closeOnClick: globalElements.backdropClick.checked,
+        },
         ...(Object.keys(animation).length ? { animation } : {}),
-      };
-    }
-    function applyConfig() {
-      configure(currentConfig());
-    }
-
-    function timerStyle() {
-      return document.getElementById('timerStyle').value;
-    }
-
-    function defaultTypeColorOverrides() {
-      if (!document.getElementById('defaultTypeUseColors').checked) return {};
-      return {
-        backgroundColor: document.getElementById('defaultTypeBg').value,
-        textColor: document.getElementById('defaultTypeText').value,
+        sound,
       };
     }
 
-    function defaultTypeIconOverride() {
-      if (!document.getElementById('defaultTypeUseIcon').checked) return {};
-      const value = document.getElementById('defaultTypeIconValue').value.trim();
-      return value ? { icon: value } : {};
+    function renderSoundPresetButtons() {
+      const container = document.getElementById('sound-preset-buttons');
+      if (!container) return;
+
+      container.innerHTML = '';
+      soundPresets.forEach((preset) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'sound-preset-btn';
+        button.textContent = preset;
+        button.dataset.sound = preset;
+        if (globalElements.sound.value === preset) {
+          button.classList.add('is-active');
+        }
+        button.addEventListener('click', () => {
+          globalElements.sound.value = preset;
+          renderSoundPresetButtons();
+          applyGlobalConfig();
+          const audio = new Audio(soundAssets[preset] || soundAssets.default);
+          audio.volume = 0.45;
+          audio.play().catch(() => undefined);
+        });
+        container.appendChild(button);
+      });
     }
 
-    // --- "Show code" panels: each mirrors the exact call the matching button(s) make ---
+    function applyGlobalConfig() {
+      configure(globalConfig());
+      renderGlobalConfigCode();
+      renderSoundPresetButtons();
+    }
 
     function renderGlobalConfigCode() {
-      const cfg = currentConfig();
-      const animationLines = cfg.animation
-        ? `\n  animation: {\n    enter: '${cfg.animation.enter ?? 'none'}',\n    exit: '${cfg.animation.exit ?? 'none'}',\n  },`
+      const cfg = globalConfig();
+      const animationText = cfg.animation
+        ? `\n  animation: {\n    enter: '${cfg.animation.enter || 'none'}',\n    exit: '${cfg.animation.exit || 'none'}'\n  },`
         : '';
+      const soundText = cfg.sound === false
+        ? `\n  sound: false,`
+        : `\n  sound: {\n    preset: '${cfg.sound.preset}',\n    volume: ${cfg.sound.volume ?? 0.45},\n    src: '${cfg.sound.src || './sounds/mac-os-1.wav'}'\n  },`;
 
-      document.getElementById('code-global-config').textContent = `configure({
+      globalElements.configCode.textContent = `configure({
   position: '${cfg.position}',
-  singleAtATime: ${cfg.singleAtATime},
-  backdrop: { enabled: ${cfg.backdrop.enabled}, closeOnClick: ${cfg.backdrop.closeOnClick} },
   theme: '${cfg.theme}',
-  maxVisible: ${cfg.maxVisible},${animationLines}
+  maxVisible: 3,
+  singleAtATime: ${cfg.singleAtATime},
+  backdrop: {
+    enabled: ${cfg.backdrop.enabled},
+    closeOnClick: ${cfg.backdrop.closeOnClick}
+  },${animationText}${soundText}
 });`;
     }
 
-    function renderDefaultTypesCode() {
-      const useColors = document.getElementById('defaultTypeUseColors').checked;
-      const bg = document.getElementById('defaultTypeBg').value;
-      const text = document.getElementById('defaultTypeText').value;
-      const colorLines = useColors ? `\n  backgroundColor: '${bg}',\n  textColor: '${text}',` : '';
-
-      const iconOverride = defaultTypeIconOverride();
-      const iconLine = 'icon' in iconOverride ? `\n  icon: '${iconOverride.icon.replace(/'/g, "\\'")}',` : '';
-
-      document.getElementById('code-default-types').textContent = `notify.success({
-  title: 'Saved',
-  message: 'Your changes have been saved.',
-  duration: 4000,
-  timerStyle: '${timerStyle()}',${iconLine}${colorLines}
-});
-
-// error / warning / info fire the same shape via notify.error(), notify.warning(), notify.info()`;
+    function renderCodeBlock(kind, text) {
+      document.querySelector(`[data-code="${kind}"]`).textContent = text;
     }
 
-    function renderTimerStylesCode() {
-      document.getElementById('code-timer-styles').textContent = `notify.info({
-  title: 'progress-bar',
-  message: 'Watch the bar deplete along the bottom edge.',
+    function registerCodeExamples() {
+      renderCodeBlock('success', `notify.success({
+  title: 'Saved',
+  message: 'Your changes have been saved.',
+  duration: 3000,
+  timerStyle: 'progress-bar',
+  sound: { preset: 'os-2', volume: 0.45, src: './sounds/mac-os-2.wav' }
+});`);
+
+      renderCodeBlock('error', `notify.error({
+  title: 'Upload failed',
+  message: 'Please check your internet connection and try again.',
+  duration: 5000,
+  timerStyle: 'countdown-number',
+  sound: { preset: 'os-4', volume: 0.5, src: './sounds/mac-os-4.wav' },
+  actions: [
+    { id: 'retry', label: 'Retry', style: 'primary' },
+    { id: 'dismiss', label: 'Dismiss', style: 'destructive' }
+  ],
+});`);
+
+      renderCodeBlock('warning-info', `notify.warning({
+  title: 'Storage almost full',
+  message: 'Only 2 GB remains on this device.',
+  duration: 5000,
+  timerStyle: 'progress-bar',
+});
+
+notify.info({
+  title: 'Update ready',
+  message: 'A new version is available for download.',
+  duration: 4000,
+  timerStyle: 'countdown-number',
+});`);
+
+      renderCodeBlock('timers', `notify.info({
+  title: 'Progress bar',
+  message: 'Watch the bar shrink to zero.',
   duration: 6000,
   timerStyle: 'progress-bar',
 });
 
 notify.info({
-  title: 'countdown-number',
-  message: 'Ticks down once per second.',
+  title: 'Countdown',
+  message: 'Ticks once per second.',
   duration: 6000,
   timerStyle: 'countdown-number',
 });
 
 notify.info({
-  title: 'timerStyle: none',
-  message: 'Countdown runs silently in the background.',
+  title: 'Silent',
+  message: 'Runs without visible timer UI.',
   duration: 6000,
   timerStyle: 'none',
-});
+});`);
 
-notify.info({
-  title: "duration: 'infinite'",
-  message: 'Stays until closed or acted on.',
-  duration: 'infinite',
-});
-
-notify.warning({
-  title: 'Long message + countdown',
-  message: LONG_MESSAGE,
-  duration: 8000,
-  timerStyle: 'countdown-number',
-});`;
-    }
-
-    function actionsTimerOptions() {
-      const style = document.getElementById('actionsTimerStyle').value;
-      if (style === 'infinite') return { duration: 'infinite' };
-      return { duration: 6000, timerStyle: style };
-    }
-
-    function htmlMessageTimerOptions() {
-      const style = document.getElementById('htmlMessageTimerStyle').value;
-      if (style === 'infinite') return { duration: 'infinite' };
-      return { duration: 5000, timerStyle: style };
-    }
-
-    function timerLinesFor(opts) {
-      return opts.duration === 'infinite'
-        ? `  duration: 'infinite',`
-        : `  duration: ${opts.duration},\n  timerStyle: '${opts.timerStyle}',`;
-    }
-
-    function renderEdgeCasesCode() {
-      document.getElementById('code-edge-cases').textContent = `notify.error({
-  title: 'Upload failed',
-  message: 'Please check your connection and try again.',
-${timerLinesFor(actionsTimerOptions())}
-  actions: [
-    { id: 'retry', label: 'Retry', style: 'primary' },
-    { id: 'dismiss', label: 'Dismiss', style: 'destructive' },
-  ],
-  onAction: (id, actionId) => {
-    if (actionId === 'retry') retryUpload();
-    if (actionId === 'dismiss') notify.close(id);
-  },
+      renderCodeBlock('animation', `configure({
+  animation: {
+    enter: 'slide-left',
+    exit: 'zoom-out',
+  }
 });
 
 notify.success({
-title: 'Toast-level animation',
-message: 'Slide in from the left, fade out on close.',
-duration: 3000,
-animation: {
-  enter: 'slide-left',
-  exit: 'zoom-out',
-},
-});
+  title: 'Animated toast',
+  message: 'This toast uses a custom motion pair.',
+  duration: 3000,
+  animation: {
+    enter: 'slide-left',
+    exit: 'zoom-out',
+  },
+});`);
 
-// [data-notify-countdown] (exported as COUNTDOWN_SLOT_ATTR) marks exactly where the countdown
-// lands — anything after that marker in the HTML renders after the countdown too.
-notify.custom({
-title: 'Custom HTML message',
-message: { html: '${HTML_MESSAGE_MARKUP}' },
-${timerLinesFor(htmlMessageTimerOptions())}
-});
- 
-notify.custom({
-icon: false,
-message: 'Copied to clipboard',
-duration: 1500,
-timerStyle: 'none',
-showCloseButton: false,
-});
- 
-const id = notify.info({ message: 'Syncing…', duration: 'infinite', unique: 'sync' });
-notify.close(id); // e.g. once the async work resolves
- 
-['success', 'error', 'warning', 'info'].forEach((type, i) => notify[type]({
-title: \`Notification \${i + 1}\`,
-message: 'Part of a stacked group.',
-duration: 8000,
-timerStyle: '${timerStyle()}',
-}));
- 
-notify.clearAll();`;
+      renderCodeBlock('sound-toast-example', `notify.info({
+  title: 'New message',
+  message: 'A notification sound plays as soon as it opens.',
+  duration: 4000,
+  sound: {
+    preset: 'os-3',
+    volume: 0.45,
+    src: './sounds/mac-os-3.wav'
   }
+});`);
 
-    function renderCustomColorsCode() {
-      const bg = document.getElementById('customBg').value;
-      const text = document.getElementById('customText').value;
-      document.getElementById('code-custom-colors').textContent = `notify.custom({
-  title: 'Custom colors',
-  message: 'backgroundColor and textColor set per-notification.',
-  backgroundColor: '${bg}',
-  textColor: '${text}',
-  duration: 5000,
-  timerStyle: '${timerStyle()}',
-});`;
-    }
+     renderCodeBlock('custom-sound-example', `const customFile = document.getElementById('custom-sound-file');
+const customSrc = customFile.files?.[0]
+ ? URL.createObjectURL(customFile.files[0])
+ : './sounds/mac-os-6.wav';
 
-    function renderIdsCode() {
-      document.getElementById('code-ids').textContent = `const id = notify.info({
-  title: 'Tracked notification',
-  message: 'Its id is shown below and targetable via #notify-toast-<id>.',
+notify.info({
+ title: 'Custom sound',
+ message: 'This toast plays your own uploaded audio file.',
+ duration: 4000,
+ sound: {
+   src: customSrc,
+   volume: 0.45,
+ },
+});`);
+
+     renderCodeBlock('feedback-form', `const feedbackToast = notify.custom({
+  title: 'Share your feedback',
+  message: {
+    html: 
+      '<div style="display:grid; gap:12px; min-width: 320px;">' +
+      '<textarea rows="4" placeholder="Tell us what can be improved..." style="width:100%; resize:vertical; border-radius:10px; border:1px solid rgba(0,0,0,0.1); padding:10px; font: inherit;"></textarea>' +
+      '</div>'
+  },
   duration: 'infinite',
-  onClose: (closedId, reason) => {
-    console.log(closedId === id, reason); // always true — same id every time
+  timerStyle: 'none',
+  showCloseButton: true,
+  actions: [{ id: 'submit', label: 'Submit', style: 'primary' }],
+  onAction: (id, actionId) => {
+    if (actionId === 'submit') notify.success({
+      title: 'Feedback sent',
+      message: 'Thanks for helping us improve.',
+      duration: 2500,
+    });
+  },
+});`);
+
+      renderCodeBlock('confirm-toast', `notify.custom({
+  title: 'Save changes?',
+  message: 'Do you want to keep the draft before leaving this page?',
+  icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>',
+  duration: 'infinite',
+  timerStyle: 'none',
+  actions: [
+    { id: 'confirm', label: 'Confirm', style: 'primary' },
+    { id: 'cancel', label: 'Cancel', style: 'default' },
+    { id: 'discard', label: 'Discard', style: 'destructive' }
+  ],
+  onAction: (id, actionId) => {
+    if (actionId === 'confirm') notify.success({ title: 'Saved', message: 'Changes confirmed.', duration: 2000 });
+    if (actionId === 'cancel') notify.close(id);
+    if (actionId === 'discard') notify.info({ title: 'Discarded', message: 'Changes were not saved.', duration: 2000 });
+  },
+});`);
+
+      renderCodeBlock('advanced', `notify.error({
+  title: 'Action required',
+  message: 'Please confirm the upload before continuing.',
+  duration: 'infinite',
+  actions: [
+    { id: 'retry', label: 'Retry', style: 'primary' },
+    { id: 'dismiss', label: 'Later', style: 'default' }
+  ],
+  onAction: (id, actionId) => {
+    if (actionId === 'retry') notify.close(id);
   },
 });
 
-// Every rendered part has a matching, stable id:
-document.getElementById(\`notify-toast-\${id}\`);
-document.getElementById(\`notify-message-\${id}\`);
-document.getElementById(\`notify-close-\${id}\`);
-
-notify.close(id); // closes that exact notification`;
+notify.custom({
+  title: 'Custom HTML',
+  message: { html: '${htmlMessageMarkup.replace(/'/g, "\\'")}' },
+  duration: 5000,
+  timerStyle: 'countdown-number',
+});`);
     }
 
-    function refreshEverything() {
-      applyConfig();
-      renderGlobalConfigCode();
-      renderDefaultTypesCode();
-      renderTimerStylesCode();
-      renderEdgeCasesCode();
-      renderCustomColorsCode();
-      renderIdsCode();
-    }
-
-    [
-      'position', 'singleAtATime', 'backdropEnabled', 'backdropCloseOnClick', 'theme', 'timerStyle',
-      'globalEnterAnimation', 'globalExitAnimation', 'defaultTypeUseColors', 'defaultTypeBg',
-      'defaultTypeText', 'customBg', 'customText', 'actionsTimerStyle', 'htmlMessageTimerStyle',
-      'defaultTypeUseIcon', 'defaultTypeIconValue',
-    ].forEach((id) => document.getElementById(id).addEventListener('change', refreshEverything));
-    refreshEverything();
-
-    document.getElementById('defaultTypeIconKind').addEventListener('change', (event) => {
-      document.getElementById('defaultTypeIconValue').value =
-        event.target.value === 'class' ? CLASS_STAR_ICON : SVG_STAR_ICON;
-      refreshEverything();
-    });
-
-    document.getElementById('btn-success').addEventListener('click', () => {
-      notify.success({ title: 'Saved', message: 'Your changes have been saved.', duration: 4000, timerStyle: timerStyle(), ...defaultTypeColorOverrides(), ...defaultTypeIconOverride() });
-    });
-    document.getElementById('btn-error').addEventListener('click', () => {
-      notify.error({ title: 'Upload failed', message: 'Please check your connection and try again.', duration: 5000, timerStyle: timerStyle(), ...defaultTypeColorOverrides(), ...defaultTypeIconOverride() });
-    });
-    document.getElementById('btn-warning').addEventListener('click', () => {
-      notify.warning({ title: 'Low disk space', message: '2GB remaining on this device.', duration: 4500, timerStyle: timerStyle(), ...defaultTypeColorOverrides(), ...defaultTypeIconOverride() });
-    });
-    document.getElementById('btn-info').addEventListener('click', () => {
-      notify.info({ title: 'Heads up', message: 'A new version is available.', duration: 4000, timerStyle: timerStyle(), ...defaultTypeColorOverrides(), ...defaultTypeIconOverride() });
-    });
-
-    document.getElementById('btn-timer-progress').addEventListener('click', () => {
-      notify.info({ title: 'progress-bar', message: 'Watch the bar deplete along the bottom edge.', duration: 6000, timerStyle: 'progress-bar' });
-    });
-    document.getElementById('btn-timer-countdown').addEventListener('click', () => {
-      notify.info({ title: 'countdown-number', message: 'Ticks down once per second.', duration: 6000, timerStyle: 'countdown-number' });
-    });
-    document.getElementById('btn-timer-none').addEventListener('click', () => {
-      notify.info({ title: 'timerStyle: none', message: 'Countdown runs silently in the background.', duration: 6000, timerStyle: 'none' });
-    });
-    document.getElementById('btn-timer-infinite').addEventListener('click', () => {
-      notify.info({ title: "duration: 'infinite'", message: 'Stays until closed or acted on.', duration: 'infinite' });
-    });
-
-    document.getElementById('btn-timer-long-message').addEventListener('click', () => {
-      notify.warning({
-        title: 'Long message + countdown',
-        message: LONG_MESSAGE,
-        duration: 8000,
-        timerStyle: 'countdown-number',
+    function bindGlobalControls() {
+      Object.values(globalElements).forEach((el) => {
+        if (el && el.addEventListener) {
+          el.addEventListener('input', applyGlobalConfig);
+          el.addEventListener('change', applyGlobalConfig);
+        }
       });
-    });
+    }
 
-    document.getElementById('btn-actions').addEventListener('click', () => {
+    function fireSuccess() {
+      const soundPreset = globalElements.sound.value;
+      notify.success({
+        title: 'Saved',
+        message: 'Your changes have been saved.',
+        duration: 3000,
+        timerStyle: globalElements.timerStyle.value,
+        sound: soundPreset === 'none' ? false : { preset: soundPreset, src: soundAssets[soundPreset] || undefined, volume: 0.45 },
+      });
+    }
+
+    function fireError() {
+      const soundPreset = globalElements.sound.value;
       notify.error({
         title: 'Upload failed',
         message: 'Please check your connection and try again.',
-        ...actionsTimerOptions(),
+        duration: 5500,
+        timerStyle: globalElements.timerStyle.value,
+        sound: soundPreset === 'none' ? false : { preset: soundPreset, src: soundAssets[soundPreset] || undefined, volume: 0.5 },
         actions: [
           { id: 'retry', label: 'Retry', style: 'primary' },
           { id: 'dismiss', label: 'Dismiss', style: 'destructive' },
         ],
         onAction: (id, actionId) => {
-          if (actionId === 'retry') writeLog('action', 'retrying upload...');
-          if (actionId === 'dismiss') notify.close(id);
+          if (actionId === 'retry') notify.close(id);
         },
       });
-    });
+    }
 
-    document.getElementById('btn-html-message').addEventListener('click', () => {
-      notify.custom({
-        title: 'Custom HTML message',
-        message: { html: HTML_MESSAGE_MARKUP },
-        ...htmlMessageTimerOptions(),
-      });
-    });
-
-    document.getElementById('btn-animated-toast').addEventListener('click', () => {
-      notify.success({
-        title: 'Toast-level animation',
-        message: 'Slide in from the left, zoom out on close.',
-        duration: 3000,
-        animation: {
-          enter: 'slide-left',
-          exit: 'zoom-out',
-        },
-      });
-    });
-
-    document.getElementById('btn-bare').addEventListener('click', () => {
-      notify.custom({
-        icon: false,
-        message: 'Copied to clipboard',
-        duration: 1500,
-        timerStyle: 'none',
-        showCloseButton: false,
-      });
-    });
-
-    document.getElementById('btn-infinite-unique').addEventListener('click', () => {
-      // Notification-level dedupe: same unique key => original toast stays visible,
-      // later duplicates are ignored until the original closes.
-      notify.info({ title: 'Syncing…', message: 'Profile sync in progress', duration: 'infinite', unique: 'sync' });
-      notify.info({ title: 'Syncing…', message: 'Profile sync in progress', duration: 'infinite', unique: 'sync' });
-      notify.info({ title: 'Syncing…', message: 'Profile sync in progress', duration: 'infinite', unique: 'sync' });
-    });
-
-    document.getElementById('btn-stack').addEventListener('click', () => {
-      const types = ['success', 'error', 'warning', 'info'];
-      for (let i = 0; i < 6; i++) {
-        notify[types[i % types.length]]({
-          title: `Notification ${i + 1}`,
-          message: 'Part of a stacked group.',
-          duration: 8000,
-          timerStyle: timerStyle(),
-        });
-      }
-    });
-
-    document.getElementById('btn-clear').addEventListener('click', () => notify.clearAll());
-
-    document.getElementById('btn-custom-colors').addEventListener('click', () => {
-      notify.custom({
-        title: 'Custom colors',
-        message: 'backgroundColor and textColor set per-notification.',
-        backgroundColor: document.getElementById('customBg').value,
-        textColor: document.getElementById('customText').value,
+    function fireWarning() {
+      notify.warning({
+        title: 'Storage almost full',
+        message: 'Only 2 GB remains on this device.',
         duration: 5000,
-        timerStyle: timerStyle(),
+        timerStyle: globalElements.timerStyle.value,
       });
-    });
+    }
 
-    let lastTrackedId = null;
+    function fireInfo() {
+      notify.info({
+        title: 'Update ready',
+        message: 'A new version is available for download.',
+        duration: 4000,
+        timerStyle: globalElements.timerStyle.value,
+      });
+    }
 
-    document.getElementById('btn-fire-tracked').addEventListener('click', () => {
-      lastTrackedId = notify.info({
-        title: 'Tracked notification',
-        message: 'Its id is shown below and targetable via #notify-toast-<id>.',
+    function fireTimerProgress() {
+      notify.info({
+        title: 'Progress bar',
+        message: 'Watch the bar shrink to zero.',
+        duration: 6000,
+        timerStyle: 'progress-bar',
+      });
+    }
+
+    function fireTimerCountdown() {
+      notify.info({
+        title: 'Countdown',
+        message: 'Ticks once per second.',
+        duration: 6000,
+        timerStyle: 'countdown-number',
+      });
+    }
+
+    function fireTimerSilent() {
+      notify.info({
+        title: 'Silent timer',
+        message: 'Runs without visible timer UI.',
+        duration: 6000,
+        timerStyle: 'none',
+      });
+    }
+
+    function fireTimerInfinite() {
+      notify.info({
+        title: 'Infinite toast',
+        message: 'This one stays visible until you close it.',
         duration: 'infinite',
       });
-      document.getElementById('lastTrackedId').textContent = lastTrackedId;
-      document.getElementById('btn-close-tracked').disabled = false;
+    }
 
-      // Prove the returned id is a real, targetable DOM id.
-      const toastEl = document.getElementById(`notify-toast-${lastTrackedId}`);
-      toastEl.style.outline = '2px solid var(--accent)';
-      toastEl.style.outlineOffset = '2px';
-    });
+    function fireAnimationToast() {
+      notify.success({
+        title: 'Animated toast',
+        message: 'This toast uses a custom motion pair.',
+        duration: 3000,
+        animation: {
+          enter: globalElements.enter.value !== 'none' ? globalElements.enter.value : 'slide-left',
+          exit: globalElements.exit.value !== 'none' ? globalElements.exit.value : 'zoom-out',
+        },
+      });
+    }
 
-    document.getElementById('btn-close-tracked').addEventListener('click', () => {
-      if (lastTrackedId) notify.close(lastTrackedId);
-    });
+    function fireAllNotificationTypes() {
+      notify.success({
+        title: 'Success',
+        message: 'Changes were saved successfully.',
+        duration: 5000,
+        timerStyle: globalElements.timerStyle.value,
+        sound: { preset: 'success', volume: 0.45 },
+      });
 
-    notify.on('close', (p) => {
-      if (p.id === lastTrackedId) {
-        writeLog('close', `close  confirmed: onClose/close-event id matches the id fire() returned (${p.id})`);
-        document.getElementById('btn-close-tracked').disabled = true;
-      }
-    });
+      notify.error({
+        title: 'Upload failed',
+        message: 'Please check your internet connection and try again.',
+        duration: 6000,
+        timerStyle: globalElements.timerStyle.value,
+        sound: { preset: 'error', volume: 0.45 },
+        actions: [
+          { id: 'retry', label: 'Retry', style: 'primary' },
+          { id: 'dismiss', label: 'Dismiss', style: 'destructive' },
+        ],
+      });
+
+      notify.warning({
+        title: 'Storage almost full',
+        message: 'Only 2 GB remains on this device.',
+        duration: 6200,
+        timerStyle: globalElements.timerStyle.value,
+        sound: { preset: 'warning', volume: 0.45 },
+      });
+
+      notify.info({
+        title: 'Update ready',
+        message: 'A new version is available for download.',
+        duration: 5500,
+        timerStyle: globalElements.timerStyle.value,
+        sound: { preset: 'info', volume: 0.45 },
+      });
+
+      notify.custom({
+        title: 'Custom notification',
+        message: 'This toast uses a fully custom template and can include buttons or HTML.',
+        duration: 7000,
+        timerStyle: 'countdown-number',
+        actions: [
+          { id: 'open', label: 'Open', style: 'primary' },
+          { id: 'dismiss', label: 'Later', style: 'default' },
+        ],
+        sound: { preset: 'default', volume: 0.45 },
+        onAction: (id, actionId) => {
+          if (actionId === 'open') notify.success({ title: 'Opened', message: 'Custom action triggered.', duration: 2000 });
+          notify.close(id);
+        },
+      });
+    }
+
+    function fireSoundToast() {
+      notify.info({
+        title: 'New message',
+        message: 'This toast plays a lightweight macOS-style sound when it appears.',
+        duration: 4200,
+        timerStyle: globalElements.timerStyle.value,
+        sound: {
+          preset: 'os-3',
+          src: './sounds/mac-os-3.wav',
+          volume: 0.45,
+        },
+      });
+    }
+
+    function fireCustomSoundToast() {
+      const fileInput = document.getElementById('custom-sound-file');
+      const file = fileInput && fileInput.files && fileInput.files[0];
+      const customSrc = file ? URL.createObjectURL(file) : './sounds/mac-os-6.wav';
+
+      notify.info({
+        title: 'Custom sound',
+        message: file
+          ? `Playing custom file: ${file.name}`
+          : 'No custom file selected — using the default demo sound instead.',
+        duration: 4200,
+        timerStyle: globalElements.timerStyle.value,
+        sound: {
+          src: customSrc,
+          volume: 0.45,
+        },
+      });
+    }
+
+    function fireFeedbackForm() {
+      notify.custom({
+        title: 'Share your feedback',
+        message: {
+          html: `
+            <div style="display:grid; gap:12px; min-width: 320px;">
+              <textarea rows="4" placeholder="Tell us what can be improved..." style="width:100%; resize:vertical; border:1px solid rgba(0,0,0,0.1); border-radius:10px; padding:10px; font:inherit;"></textarea>
+            </div>
+          `,
+        },
+        duration: 'infinite',
+        timerStyle: 'none',
+        actions: [{ id: 'submit', label: 'Submit', style: 'primary' }],
+        onAction: (id, actionId) => {
+          if (actionId === 'submit') {
+            const textarea = document.querySelector('.notify-toast textarea');
+            const value = textarea ? textarea.value.trim() : '';
+            notify.success({
+              title: 'Feedback sent',
+              message: value ? `Thanks! We received: “${value.slice(0, 42)}${value.length > 42 ? '…' : ''}”` : 'Thanks for helping us improve.',
+              duration: 2500,
+            });
+            notify.close(id);
+          }
+        },
+      });
+    }
+
+    function fireConfirmToast() {
+      notify.custom({
+        title: 'Save changes?',
+        message: 'Do you want to keep the draft before leaving this page?',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>',
+        duration: 'infinite',
+        timerStyle: 'none',
+        actions: [
+          { id: 'confirm', label: 'Confirm', style: 'primary' },
+          { id: 'cancel', label: 'Cancel', style: 'default' },
+          { id: 'discard', label: 'Discard', style: 'destructive' },
+        ],
+        onAction: (id, actionId) => {
+          if (actionId === 'confirm') {
+            notify.success({ title: 'Saved', message: 'Changes confirmed.', duration: 2000 });
+          }
+          if (actionId === 'cancel') {
+            notify.info({ title: 'Cancelled', message: 'Draft was kept.', duration: 2000 });
+          }
+          if (actionId === 'discard') {
+            notify.info({ title: 'Discarded', message: 'Changes were not saved.', duration: 2000 });
+          }
+          notify.close(id);
+        },
+      });
+    }
+
+    function fireActions() {
+      notify.error({
+        title: 'Action required',
+        message: 'Please confirm before continuing.',
+        duration: 'infinite',
+        actions: [
+          { id: 'retry', label: 'Retry', style: 'primary' },
+          { id: 'later', label: 'Later', style: 'default' },
+        ],
+        onAction: (id, actionId) => {
+          if (actionId === 'retry') notify.close(id);
+        },
+      });
+    }
+
+    function fireHtmlMessage() {
+      notify.custom({
+        title: 'Custom HTML message',
+        message: { html: htmlMessageMarkup },
+        duration: 5000,
+        timerStyle: 'countdown-number',
+      });
+    }
+
+    function fireCustomColors() {
+      notify.custom({
+        title: 'Custom colors',
+        message: 'Per-notification styling without affecting the rest of the app.',
+        backgroundColor: '#111827',
+        textColor: '#fde68a',
+        duration: 5000,
+        timerStyle: globalElements.timerStyle.value,
+      });
+    }
+
+    function fireDedupe() {
+      notify.info({
+        title: 'Syncing…',
+        message: 'Profile sync in progress',
+        duration: 'infinite',
+        unique: 'sync-demo',
+      });
+      notify.info({
+        title: 'Syncing…',
+        message: 'Profile sync in progress',
+        duration: 'infinite',
+        unique: 'sync-demo',
+      });
+    }
+
+    function fireStack() {
+      ['success', 'error', 'warning', 'info'].forEach((type, index) => {
+        notify[type]({
+          title: `Notification ${index + 1}`,
+          message: 'Part of a stacked group.',
+          duration: 8000,
+          timerStyle: globalElements.timerStyle.value,
+        });
+      });
+    }
+
+    function fireClearAll() {
+      notify.clearAll();
+    }
+
+    function bindButtons() {
+      document.querySelector('[data-demo="success"]').addEventListener('click', fireSuccess);
+      document.querySelector('[data-demo="error"]').addEventListener('click', fireError);
+      document.querySelector('[data-demo="warning"]').addEventListener('click', fireWarning);
+      document.querySelector('[data-demo="info"]').addEventListener('click', fireInfo);
+
+      document.querySelector('[data-demo="timer-progress"]').addEventListener('click', fireTimerProgress);
+      document.querySelector('[data-demo="timer-countdown"]').addEventListener('click', fireTimerCountdown);
+      document.querySelector('[data-demo="timer-none"]').addEventListener('click', fireTimerSilent);
+      document.querySelector('[data-demo="timer-infinite"]').addEventListener('click', fireTimerInfinite);
+
+      document.querySelector('[data-demo="animation-toast"]').addEventListener('click', fireAnimationToast);
+      document.querySelector('[data-demo="sound-toast"]').addEventListener('click', fireSoundToast);
+      document.querySelector('[data-demo="custom-sound-toast"]').addEventListener('click', fireCustomSoundToast);
+      document.querySelector('#open-all-demo-notifications').addEventListener('click', fireAllNotificationTypes);
+      document.querySelector('[data-demo="feedback-form"]').addEventListener('click', fireFeedbackForm);
+      document.querySelector('[data-demo="confirm-toast"]').addEventListener('click', fireConfirmToast);
+      document.querySelector('[data-demo="actions"]').addEventListener('click', fireActions);
+      document.querySelector('[data-demo="html-message"]').addEventListener('click', fireHtmlMessage);
+      document.querySelector('[data-demo="custom-colors"]').addEventListener('click', fireCustomColors);
+      document.querySelector('[data-demo="dedupe"]').addEventListener('click', fireDedupe);
+      document.querySelector('[data-demo="stack"]').addEventListener('click', fireStack);
+      document.querySelector('[data-demo="clear-all"]').addEventListener('click', fireClearAll);
+    }
+
+    function initLog() {
+      const page = document.querySelector('.page');
+      if (!page) return;
+
+      const log = document.createElement('section');
+      log.id = 'demo-log';
+      log.innerHTML = `
+        <div class="demo-log-header">
+          <span>Live event log</span>
+          <button type="button" class="demo-log-clear">Clear</button>
+        </div>
+        <div class="demo-log-list" aria-live="polite"></div>
+      `;
+      page.appendChild(log);
+
+      const list = log.querySelector('.demo-log-list');
+      const clearButton = log.querySelector('.demo-log-clear');
+
+      const addEntry = (kind, message, id, extra = '') => {
+        if (!list) return;
+
+        const item = document.createElement('div');
+        item.className = `demo-log-entry ${kind}`;
+
+        const label = document.createElement('span');
+        label.className = 'demo-log-label';
+        label.textContent = kind === 'open' ? 'Open' : kind === 'close' ? 'Close' : 'Action';
+
+        const meta = document.createElement('span');
+        meta.innerHTML = `${message} <strong>${id}</strong>${extra ? ` ${extra}` : ''}`;
+
+        item.appendChild(label);
+        item.appendChild(meta);
+        list.prepend(item);
+      };
+
+      clearButton?.addEventListener('click', () => {
+        if (list) list.innerHTML = '';
+      });
+
+      notify.on('open', (p) => {
+        addEntry('open', 'Toast opened', p.id);
+        console.info('open', p);
+      });
+      notify.on('close', (p) => {
+        addEntry('close', 'Toast closed', p.id, `reason: ${p.reason}`);
+        console.info('close', p);
+      });
+      notify.on('action', (p) => {
+        addEntry('action', 'Action fired', p.id, `action: ${p.actionId}`);
+        console.info('action', p);
+      });
+    }
+
+    bindGlobalControls();
+    registerCodeExamples();
+    applyGlobalConfig();
+    bindButtons();
+    initLog();
   </script>
 </body>
 </html>
