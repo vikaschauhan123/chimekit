@@ -1,5 +1,5 @@
 import { defaultIconMarkup } from './icons';
-import type { MessageContent, NotificationAction, ResolvedNotificationOptions } from './types';
+import type { AnimationConfig, MessageContent, NotificationAction, ResolvedNotificationOptions } from './types';
 
 /**
  * Attribute a `{ html }` (or custom `HTMLElement`/function) message can include on any element to
@@ -7,6 +7,67 @@ import type { MessageContent, NotificationAction, ResolvedNotificationOptions } 
  * markup ends up after the countdown. Falls back to appending the countdown at the end when absent.
  */
 export const COUNTDOWN_SLOT_ATTR = 'data-notify-countdown';
+
+const BUILT_IN_ANIMATIONS = new Set([
+  'none',
+  'fade',
+  'fade-in',
+  'fade-out',
+  'slide-left',
+  'slide-right',
+  'slide-top',
+  'slide-bottom',
+  'zoom-in',
+  'zoom-out',
+]);
+
+function normalizeAnimation(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  const trimmed = value.trim();
+  if (!trimmed || trimmed === 'none') return undefined;
+  const lowered = trimmed.toLowerCase();
+  if (lowered === 'fade' || lowered === 'fade-in') return 'fade-in';
+  if (lowered === 'fade-out') return 'fade-out';
+  if (lowered === 'slide-left') return 'slide-left';
+  if (lowered === 'slide-right') return 'slide-right';
+  if (lowered === 'slide-top' || lowered === 'slide-up') return 'slide-top';
+  if (lowered === 'slide-bottom' || lowered === 'slide-down') return 'slide-bottom';
+  if (lowered === 'zoom' || lowered === 'zoom-in') return 'zoom-in';
+  if (lowered === 'zoom-out') return 'zoom-out';
+  return trimmed;
+}
+
+export function applyAnimationConfig(element: HTMLElement, animation?: AnimationConfig): void {
+  const enter = normalizeAnimation(animation?.enter);
+  const exit = normalizeAnimation(animation?.exit);
+
+  if (enter) {
+   if (BUILT_IN_ANIMATIONS.has(enter)) {
+     element.dataset.animationEnter = enter;
+     element.style.removeProperty('animation');
+   } else {
+     delete element.dataset.animationEnter;
+     element.style.animation = enter;
+   }
+  } else {
+   delete element.dataset.animationEnter;
+   element.style.removeProperty('animation');
+  }
+
+  if (exit) {
+   if (BUILT_IN_ANIMATIONS.has(exit)) {
+     element.dataset.animationExit = exit;
+     element.style.removeProperty('--notify-exit-animation');
+   } else {
+     delete element.dataset.animationExit;
+     element.style.setProperty('--notify-exit-animation', exit);
+     element.style.animation = exit;
+   }
+  } else {
+   delete element.dataset.animationExit;
+   element.style.removeProperty('--notify-exit-animation');
+  }
+}
 
 export interface NotificationHandlers {
   onCloseClick: () => void;
@@ -111,6 +172,8 @@ export function createNotificationElement(
     root.style.color = options.textColor;
     root.style.setProperty('--notify-muted', options.textColor);
   }
+
+  applyAnimationConfig(root, options.animation);
 
   const resolvedIcon = options.icon === undefined ? defaultIconMarkup(options.type) : options.icon;
   if (resolvedIcon !== false && resolvedIcon !== undefined) {

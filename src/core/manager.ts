@@ -144,6 +144,10 @@ export class NotificationManager {
       timerStyle: options.timerStyle ?? 'none',
       showCloseButton: options.showCloseButton ?? true,
       pauseOnHover: options.pauseOnHover ?? this.config.pauseOnHover,
+      animation: {
+        enter: options.animation?.enter ?? this.config.animation.enter,
+        exit: options.animation?.exit ?? this.config.animation.exit,
+      },
     };
 
     const elements = createNotificationElement(resolved, {
