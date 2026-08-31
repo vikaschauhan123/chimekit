@@ -6,6 +6,11 @@ plain JS/TS, React, Angular, Vue, Svelte, or any other framework.
 **[▶ Live demo](https://vikaschauhan123.github.io/chimekit/)** — a playground covering every
 option below.
 
+<p align="center">
+  <img src="./assets/chimekit-toast-stack-preview.png" alt="ChimeKit stacked notification preview" width="980" />
+  <img src="./assets/chimekit-notification-form-preview.png" alt="ChimeKit custom notification and confirmation preview" width="980" />
+</p>
+
 - Stacked toasts in any of 6 positions, with "Show more / Show less" and "Clear All"
 - 4 built-in types (`success` / `error` / `warning` / `info`) plus fully custom notifications
 - 3 timer styles (`progress-bar`, `countdown-number`, `none`) with pause-on-hover — work on action
